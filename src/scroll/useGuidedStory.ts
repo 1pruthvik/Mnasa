@@ -73,7 +73,7 @@ export function useGuidedStory(enabled: boolean) {
     const takeOver = (event?: Event) => {
       // Player controls (especially the speed selector on touch devices) must not
       // be mistaken for a user's attempt to take over scrolling.
-      if (event?.type === 'touchstart' && event.target instanceof Element && event.target.closest('.player, .scene-orbit-controls')) return
+      if (event?.type === 'touchstart' && event.target instanceof Element && event.target.closest('.player')) return
       if (event?.type === 'touchstart' && event.target instanceof Element && event.target.closest('.scene-orbit-surface')) {
         const touch = (event as TouchEvent).touches[0]
         sceneTouch = touch ? { x: touch.clientX, y: touch.clientY } : null

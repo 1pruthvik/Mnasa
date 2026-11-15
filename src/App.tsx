@@ -77,7 +77,7 @@ export default function App() {
       <div className="w-full pointer-events-none" style={{ height: '3800vh' }} aria-hidden="true" />
     </>}
     {welcome && <Welcome onPlay={play} onExplore={explore} minutes={player.totalMinutes} fallback={isFallback} />}
-    {explorerItem && <ModelExplorer initial={explorerItem} onClose={closeExplorer} onRotateScene={() => { setExplorerItem(null); requestAnimationFrame(() => document.querySelector<HTMLButtonElement>('.scene-orbit-controls button')?.focus()) }} />}
+    {explorerItem && <ModelExplorer initial={explorerItem} onClose={closeExplorer} onRotateScene={() => { setExplorerItem(null); requestAnimationFrame(() => document.querySelector<HTMLElement>('.scene-orbit-surface')?.focus()) }} />}
     <Credits isOpen={creditsOpen} onClose={() => setCreditsOpen(false)} />
     {mapModalOpen && <div role="dialog" aria-modal="true" aria-label="Atlas maps" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"><div className="flex flex-col items-center gap-3"><div className="flex gap-2">
       <button onClick={() => setMapModalOpen('lunar')} className="px-3 py-1 rounded text-xs font-mono bg-slate-800">Moon (Near Side)</button>
