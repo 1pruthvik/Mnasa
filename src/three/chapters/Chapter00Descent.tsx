@@ -114,3 +114,4 @@ export function Chapter00Descent() {
     </group>
   )
 }
+

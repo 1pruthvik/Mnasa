@@ -29,3 +29,4 @@ export function Chapter02MarsEarly() {
     </group>
   )
 }
+

@@ -4,6 +4,7 @@ import { Overlay } from './ui/Overlay'
 import { ProgressRail } from './ui/ProgressRail'
 import { ObjectLabels } from './ui/ObjectLabel'
 import { ReadingModeToggle } from './ui/ReadingModeToggle'
+import { TelemetryHUD } from './ui/TelemetryHUD'
 import { Footer } from './ui/Footer'
 import { FallbackStory } from './ui/FallbackStory'
 import { Credits } from './ui/Credits'
@@ -50,6 +51,7 @@ export default function App() {
           <CanvasRoot />
           <Overlay onScrollToScene={handleScrollToScene} />
           <ObjectLabels />
+          <TelemetryHUD />
           <ProgressRail onScrollTo={handleScrollToBeat} />
           <ReadingModeToggle />
           <Footer

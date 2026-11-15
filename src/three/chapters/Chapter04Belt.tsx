@@ -76,3 +76,4 @@ export function Chapter04Belt() {
     </group>
   )
 }
+

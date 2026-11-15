@@ -33,3 +33,4 @@ export function Chapter03MarsLong() {
     </group>
   )
 }
+

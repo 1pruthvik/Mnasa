@@ -128,3 +128,4 @@ export const antennaMeshMaterial = new THREE.MeshStandardMaterial({
   roughness: 0.5,
   wireframe: true,
 })
+

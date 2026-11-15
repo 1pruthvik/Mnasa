@@ -71,3 +71,4 @@ export function StarField({ density = 'dense' }: StarFieldProps) {
     </points>
   )
 }
+
