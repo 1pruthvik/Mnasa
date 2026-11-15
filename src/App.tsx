@@ -1,39 +1,187 @@
-import { useState } from 'react'
-import { SpaceCanvas } from './components/SpaceCanvas'
-import { HUD } from './components/HUD'
-import { NasaApiDrawer } from './components/NasaApiDrawer'
-import { CELESTIAL_BODIES } from './data/spaceData'
-import type { CelestialBodyData } from './types'
+// src/App.tsx
+import { useEffect, useRef } from 'react'
+import Lenis from 'lenis'
+import { useStore } from './store'
+import { TOTAL_SCREENS, beatAt, stopAt } from './contracts/beats'
+import { detectCapability } from './three/systems/capability'
+import CanvasRoot from './three/CanvasRoot'
 
 export function App() {
-  const [selectedBody, setSelectedBody] = useState<CelestialBodyData>(CELESTIAL_BODIES[1]) // Default to Earth
-  const [speedMultiplier, setSpeedMultiplier] = useState<number>(1)
-  const [isApiDrawerOpen, setIsApiDrawerOpen] = useState<boolean>(false)
+  const progress = useStore(s => s.progress)
+  const activeBeatId = useStore(s => s.activeBeatId)
+  const activeChapter = useStore(s => s.activeChapter)
+  const activeStop = useStore(s => s.activeStop)
+  const labelPositions = useStore(s => s.labelPositions)
+  const labelsOn = useStore(s => s.labelsOn)
+  const filterWorkingOnly = useStore(s => s.filterWorkingOnly)
+  const setFilterWorkingOnly = useStore(s => s.setFilterWorkingOnly)
+  const lenisRef = useRef<Lenis | null>(null)
+
+  // 1. Detect device capability once on boot
+  useEffect(() => {
+    detectCapability()
+  }, [])
+
+  // 2. Initialize smooth scroll engine with Lenis (38 screens height = 3800vh)
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+    })
+    lenisRef.current = lenis
+
+    const onScroll = () => {
+      const scrollY = window.scrollY
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      if (maxScroll > 0) {
+        const p = Math.min(1, Math.max(0, scrollY / maxScroll))
+        useStore.getState().setProgress(p)
+      }
+    }
+
+    lenis.on('scroll', onScroll)
+
+    let rafId: number
+    function raf(time: number) {
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
+    }
+    rafId = requestAnimationFrame(raf)
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      lenis.destroy()
+    }
+  }, [])
+
+  const currentBeat = beatAt(progress)
+  const currentStop = stopAt(progress)
 
   return (
-    <main className="w-screen h-screen relative overflow-hidden bg-slate-950">
-      {/* 3D Scene Viewport */}
-      <SpaceCanvas
-        selectedBody={selectedBody}
-        onSelectBody={setSelectedBody}
-        speedMultiplier={speedMultiplier}
-      />
+    <div style={{ position: 'relative', width: '100%', minHeight: `${TOTAL_SCREENS * 100}vh`, background: '#05070d' }}>
+      {/* ── 3D Viewport: Single CanvasRoot (fixed position) ── */}
+      <CanvasRoot />
 
-      {/* Mission Control HUD Overlay */}
-      <HUD
-        selectedBody={selectedBody}
-        onSelectBody={setSelectedBody}
-        speedMultiplier={speedMultiplier}
-        setSpeedMultiplier={setSpeedMultiplier}
-        onToggleApiDrawer={() => setIsApiDrawerOpen(!isApiDrawerOpen)}
-      />
+      {/* ── Floating 2D Screen Anchored Labels Bridge (from LabelBridge / projectToScreen) ── */}
+      {labelsOn && (
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+          {Object.entries(labelPositions).map(([id, pos]) => {
+            if (!pos.visible) return null
+            return (
+              <div
+                key={id}
+                style={{
+                  position: 'absolute',
+                  left: `${pos.x}px`,
+                  top: `${pos.y}px`,
+                  transform: 'translate(-50%, -100%)',
+                  padding: '4px 8px',
+                  background: 'rgba(5, 7, 13, 0.75)',
+                  border: '1px solid rgba(223, 233, 255, 0.25)',
+                  borderRadius: '2px',
+                  fontFamily: 'monospace',
+                  fontSize: '11px',
+                  letterSpacing: '0.08em',
+                  color: '#dfe9ff',
+                  textTransform: 'uppercase',
+                  whiteSpace: 'nowrap',
+                  backdropFilter: 'blur(4px)',
+                  transition: 'opacity 0.2s ease',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#ffcc00' }} />
+                  {id}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
-      {/* NASA API Telemetry & Data Drawer */}
-      <NasaApiDrawer
-        isOpen={isApiDrawerOpen}
-        onClose={() => setIsApiDrawerOpen(false)}
-      />
-    </main>
+      {/* ── Minimalist HUD: Telemetry & Navigation Overlay ── */}
+      <header
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          padding: '18px 24px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          pointerEvents: 'none',
+          zIndex: 20,
+          fontFamily: 'monospace',
+          color: '#dfe9ff',
+        }}
+      >
+        <div>
+          <div style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            Abandoned but Not Forgotten
+          </div>
+          <div style={{ fontSize: '11px', color: '#8899aa', marginTop: '4px', letterSpacing: '0.06em' }}>
+            NASA SPACE APPS 2026 · {currentStop.label.toUpperCase()} · {currentBeat.label}
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: '12px', letterSpacing: '0.08em' }}>
+            {activeChapter}
+          </div>
+          <div style={{ fontSize: '11px', color: '#8899aa', marginTop: '4px' }}>
+            ALTITUDE SCROLL: {(progress * 100).toFixed(1)}% · BEAT {activeBeatId}
+          </div>
+        </div>
+      </header>
+
+      {/* ── Bottom Controls: Working Only Toggle & Coordinates ── */}
+      <footer
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: '16px 24px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          pointerEvents: 'auto',
+          zIndex: 20,
+          fontFamily: 'monospace',
+          fontSize: '11px',
+          color: '#8899aa',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <button
+            onClick={() => setFilterWorkingOnly(!filterWorkingOnly)}
+            style={{
+              background: filterWorkingOnly ? 'rgba(255, 204, 0, 0.2)' : 'rgba(255, 255, 255, 0.06)',
+              border: `1px solid ${filterWorkingOnly ? '#ffcc00' : 'rgba(255, 255, 255, 0.15)'}`,
+              color: filterWorkingOnly ? '#ffcc00' : '#dfe9ff',
+              padding: '6px 12px',
+              borderRadius: '3px',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              fontSize: '11px',
+              letterSpacing: '0.05em',
+            }}
+          >
+            {filterWorkingOnly ? '● PASSIVE RETROREFLECTORS ONLY' : '○ SHOW RETIRED HARDWARE'}
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', gap: '16px', letterSpacing: '0.06em' }}>
+          <span>STOP: {activeStop.toUpperCase()}</span>
+          <span>SCROLL TO DESCEND</span>
+        </div>
+      </footer>
+    </div>
   )
 }
 
