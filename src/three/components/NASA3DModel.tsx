@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react'
+import { Suspense, useMemo, Component, type ErrorInfo, type ReactNode } from 'react'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
@@ -7,7 +7,29 @@ interface NASA3DModelProps {
   scale?: number | [number, number, number]
   position?: [number, number, number]
   rotation?: [number, number, number]
-  fallback?: React.ReactNode
+  fallback?: ReactNode
+}
+
+class ModelErrorBoundary extends Component<
+  { fallback: ReactNode; children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.warn('GLTF load failed, switching to 3D illustration fallback:', error, info)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || null
+    }
+    return this.props.children
+  }
 }
 
 function ModelInner({
@@ -48,14 +70,15 @@ export function NASA3DModel({
   fallback = null,
 }: NASA3DModelProps) {
   return (
-    <Suspense fallback={fallback}>
-      <ModelInner
-        url={url}
-        scale={scale}
-        position={position}
-        rotation={rotation}
-      />
-    </Suspense>
+    <ModelErrorBoundary fallback={fallback}>
+      <Suspense fallback={fallback}>
+        <ModelInner
+          url={url}
+          scale={scale}
+          position={position}
+          rotation={rotation}
+        />
+      </Suspense>
+    </ModelErrorBoundary>
   )
 }
-

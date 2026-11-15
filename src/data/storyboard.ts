@@ -411,3 +411,4 @@ export function getTotalDemoDuration(speed: 'normal' | 'slow' = 'normal'): numbe
     STORYBOARD.reduce((acc, shot) => acc + (shot.holdDuration * mult + shot.transitionDuration), 0)
   )
 }
+

@@ -16,7 +16,23 @@ export const GuidedDemoControls: React.FC = () => {
   const setDemoSpeed = useStore((s) => s.setDemoSpeed)
   const startDemo = useStore((s) => s.startDemo)
 
-  if (demoState === 'manual') return null
+  if (demoState === 'manual') {
+    return (
+      <div className="fixed bottom-6 right-6 z-40 animate-in fade-in duration-300">
+        <button
+          onClick={() => startDemo(true)}
+          className="group px-4 py-2.5 rounded-xl bg-slate-950/90 hover:bg-slate-900 text-cyan-300 hover:text-cyan-200 border border-cyan-500/40 hover:border-cyan-400 font-mono text-xs font-bold flex items-center gap-2.5 shadow-2xl backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95"
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
+          </span>
+          <Play className="w-3.5 h-3.5 fill-current text-cyan-400" />
+          <span>Play Guided Demo (4m)</span>
+        </button>
+      </div>
+    )
+  }
 
   const currentShot = STORYBOARD[demoShotIndex] || STORYBOARD[0]
   const isPlaying = demoState === 'playing'
@@ -159,3 +175,4 @@ export const GuidedDemoControls: React.FC = () => {
     </div>
   )
 }
+

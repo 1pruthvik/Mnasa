@@ -64,6 +64,7 @@ export default function App() {
           <Overlay
             onScrollToScene={handleScrollToScene}
             onScrollToExplore={() => handleScrollToBeat(0.045)}
+            onScrollToBeat={handleScrollToBeat}
           />
           <ObjectLabels />
           <TelemetryHUD />

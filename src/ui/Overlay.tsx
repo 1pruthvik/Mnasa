@@ -9,11 +9,13 @@ import { InventoryTable } from './InventoryTable'
 interface OverlayProps {
   onScrollToScene?: (sceneId: string) => void
   onScrollToExplore?: () => void
+  onScrollToBeat?: (t: number) => void
 }
 
 export const Overlay: React.FC<OverlayProps> = ({
   onScrollToScene,
   onScrollToExplore,
+  onScrollToBeat,
 }) => {
   const progress = useStore((s) => s.progress)
   const demoState = useStore((s) => s.demoState)
@@ -39,7 +41,7 @@ export const Overlay: React.FC<OverlayProps> = ({
 
   return (
     <section
-      className="fixed inset-0 pointer-events-none z-10 flex flex-col justify-between p-4 sm:p-6 md:p-8 lg:p-12 select-none overflow-hidden"
+      className="fixed inset-0 pointer-events-none z-20 flex flex-col justify-start pt-16 pb-6 px-4 sm:px-6 md:px-8 lg:px-12 select-none overflow-hidden"
       role="region"
       aria-label="Narrative & Science Atlas"
     >
@@ -47,9 +49,12 @@ export const Overlay: React.FC<OverlayProps> = ({
       <div className="absolute inset-y-0 left-0 w-full md:w-[48%] lg:w-[42%] bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-transparent pointer-events-none" />
 
       {/* Main Left-Column Content Container (30-38% safe area) */}
-      <div className="relative z-10 my-auto w-full md:w-[44%] lg:w-[38%] max-h-[82vh] overflow-y-auto pr-2 pb-24">
+      <div className="pointer-events-auto relative z-10 w-full md:w-[44%] lg:w-[38%] max-h-[calc(100vh-5.5rem)] overflow-y-auto pr-2 pb-16">
         {isOpeningHero ? (
-          <HeroIntro onScrollToExplore={handleScrollExplore} />
+          <HeroIntro
+            onScrollToExplore={handleScrollExplore}
+            onJumpTo={onScrollToBeat}
+          />
         ) : isInventoryScene ? (
           <div className="pointer-events-auto">
             <InventoryTable onSelectScene={onScrollToScene} />

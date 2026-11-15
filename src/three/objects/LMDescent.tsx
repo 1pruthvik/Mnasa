@@ -1,3 +1,4 @@
+import { NASA3DModel } from '../components/NASA3DModel'
 import {
   goldFoilMaterial,
   silverFoilMaterial,
@@ -5,7 +6,7 @@ import {
   aluminiumMaterial,
 } from '../systems/materials'
 
-export function LMDescent() {
+function ProceduralLMDescent() {
   return (
     <group position={[0, -0.2, 0]}>
       {/* Octagonal Central Descent Body (4.2m width, 1.7m height) */}
@@ -78,5 +79,16 @@ export function LMDescent() {
         <planeGeometry args={[0.3, 0.22]} />
       </mesh>
     </group>
+  )
+}
+
+export function LMDescent() {
+  return (
+    <NASA3DModel
+      url="/models/apollo-lm.glb"
+      scale={1.2}
+      position={[0, -0.2, 0]}
+      fallback={<ProceduralLMDescent />}
+    />
   )
 }

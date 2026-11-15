@@ -1,7 +1,7 @@
 import React from 'react'
 import { useStore } from '../store'
 import { beatAt } from '../contracts/beats'
-import { MapPin, Compass, BookOpen, Eye } from 'lucide-react'
+import { MapPin, Compass, BookOpen, Eye, Play, Pause, RotateCcw } from 'lucide-react'
 
 interface AtlasNavHeaderProps {
   onScrollToBeat?: (t: number) => void
@@ -126,6 +126,10 @@ export const AtlasNavHeader: React.FC<AtlasNavHeaderProps> = ({
   const progress = useStore((s) => s.progress)
   const readingMode = useStore((s) => s.readingMode)
   const toggleReadingMode = useStore((s) => s.toggleReadingMode)
+  const demoState = useStore((s) => s.demoState)
+  const startDemo = useStore((s) => s.startDemo)
+  const pauseDemo = useStore((s) => s.pauseDemo)
+  const resumeDemo = useStore((s) => s.resumeDemo)
   const beat = beatAt(progress)
 
   const breadcrumb = LOCATION_BREADCRUMBS[beat.sceneId] || LOCATION_BREADCRUMBS['0.1']
@@ -175,8 +179,52 @@ export const AtlasNavHeader: React.FC<AtlasNavHeaderProps> = ({
           </div>
         </div>
 
-        {/* Right: Quick Destination Jumps & Accessibility Controls */}
-        <nav aria-label="Destination Quick Jump" className="flex items-center gap-1 text-[10px] font-mono overflow-x-auto pb-0.5">
+        {/* Right: Guided Demo Button, Quick Destination Jumps & Accessibility Controls */}
+        <nav aria-label="Destination Quick Jump" className="flex items-center gap-1.5 text-[10px] font-mono overflow-x-auto pb-0.5">
+          {/* Unmissable Primary Guided Demo Play Button */}
+          {demoState === 'manual' && (
+            <button
+              onClick={() => startDemo(true)}
+              className="px-2.5 py-1 rounded bg-gradient-to-r from-cyan-400 to-sky-300 hover:from-cyan-300 hover:to-sky-200 text-slate-950 font-bold font-mono text-[11px] flex items-center gap-1 shadow-md shadow-cyan-950/40 cursor-pointer transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+              title="Play autonomous guided demo through all 17 scenes (~4 mins)"
+            >
+              <Play className="w-3 h-3 fill-current text-slate-950" />
+              <span>Play Guided Demo</span>
+            </button>
+          )}
+          {demoState === 'playing' && (
+            <button
+              onClick={pauseDemo}
+              className="px-2.5 py-1 rounded bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold font-mono text-[11px] flex items-center gap-1 shadow-md cursor-pointer whitespace-nowrap"
+              title="Pause guided demo"
+            >
+              <Pause className="w-3 h-3 fill-current text-slate-950" />
+              <span>Pause Demo</span>
+            </button>
+          )}
+          {demoState === 'paused' && (
+            <button
+              onClick={resumeDemo}
+              className="px-2.5 py-1 rounded bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold font-mono text-[11px] flex items-center gap-1 shadow-md cursor-pointer whitespace-nowrap"
+              title="Resume guided demo"
+            >
+              <Play className="w-3 h-3 fill-current text-slate-950" />
+              <span>Resume Demo</span>
+            </button>
+          )}
+          {demoState === 'finished' && (
+            <button
+              onClick={() => startDemo(true)}
+              className="px-2.5 py-1 rounded bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold font-mono text-[11px] flex items-center gap-1 shadow-md cursor-pointer whitespace-nowrap"
+              title="Replay guided demo"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>Replay Demo</span>
+            </button>
+          )}
+
+          <div className="h-3 w-px bg-slate-700 mx-0.5 hidden sm:block" />
+
           <button
             onClick={() => handleNav(0.0)}
             className="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 cursor-pointer whitespace-nowrap"
