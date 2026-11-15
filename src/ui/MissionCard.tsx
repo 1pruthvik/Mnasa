@@ -100,3 +100,4 @@ export const MissionCard: React.FC<MissionCardProps> = ({ sceneId }) => {
     </article>
   )
 }
+

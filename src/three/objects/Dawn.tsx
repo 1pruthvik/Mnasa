@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { NASA3DModel } from '../components/NASA3DModel'
 import {
   solarPanelMaterial,
   whitePaintMaterial,
@@ -8,17 +9,9 @@ import {
   blackStrutMaterial,
 } from '../systems/materials'
 
-export function Dawn() {
-  const dawnRef = useRef<THREE.Group>(null!)
-
-  useFrame((_, dt) => {
-    if (dawnRef.current) {
-      dawnRef.current.rotation.y += dt * 0.04
-    }
-  })
-
+function ProceduralDawn() {
   return (
-    <group ref={dawnRef} position={[-25, 8, -15]}>
+    <group>
       {/* Central Box Bus Body */}
       <mesh material={whitePaintMaterial} castShadow>
         <boxGeometry args={[1.6, 1.8, 1.4]} />
@@ -48,8 +41,7 @@ export function Dawn() {
           <mesh rotation={[Math.PI, 0, 0]} material={aluminiumMaterial}>
             <cylinderGeometry args={[0.16, 0.08, 0.25, 12]} />
           </mesh>
-          {/* Xenon Glow Point */}
-          <mesh position={[0, -0.18, 0]}>
+          <mesh position={[0, -0.2, 0]}>
             <sphereGeometry args={[0.08, 8, 8]} />
             <meshBasicMaterial color="#38bdf8" />
           </mesh>
@@ -59,3 +51,22 @@ export function Dawn() {
   )
 }
 
+export function Dawn() {
+  const dawnRef = useRef<THREE.Group>(null!)
+
+  useFrame((_, dt) => {
+    if (dawnRef.current) {
+      dawnRef.current.rotation.y += dt * 0.04
+    }
+  })
+
+  return (
+    <group ref={dawnRef} position={[-25, 8, -15]}>
+      <NASA3DModel
+        url="/models/dawn.glb"
+        scale={1.2}
+        fallback={<ProceduralDawn />}
+      />
+    </group>
+  )
+}

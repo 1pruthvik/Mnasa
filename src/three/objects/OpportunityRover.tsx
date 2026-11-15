@@ -1,3 +1,4 @@
+import { NASA3DModel } from '../components/NASA3DModel'
 import {
   solarPanelMaterial,
   goldFoilMaterial,
@@ -5,7 +6,7 @@ import {
   blackStrutMaterial,
 } from '../systems/materials'
 
-export function OpportunityRover() {
+function ProceduralOpportunityRover() {
   return (
     <group position={[-8, -0.2, -8]}>
       {/* Central Equipment Warm Electronics Box (WEB) */}
@@ -48,40 +49,37 @@ export function OpportunityRover() {
 
       {/* 6-Wheeled Rocker-Bogie Suspension */}
       {[
-        [-0.85, 0.25, 0.85],
-        [0, 0.25, 0.95],
-        [0.85, 0.25, 0.85],
-        [-0.85, 0.25, -0.85],
-        [0, 0.25, -0.95],
-        [0.85, 0.25, -0.85],
+        [-0.8, 0.22, 0.65],
+        [0, 0.22, 0.72],
+        [0.8, 0.22, 0.65],
+        [-0.8, 0.22, -0.65],
+        [0, 0.22, -0.72],
+        [0.8, 0.22, -0.65],
       ].map(([x, y, z], idx) => (
-        <group key={idx} position={[x, y, z]}>
-          {/* Wheel */}
-          <mesh rotation={[Math.PI / 2, 0, 0]} material={aluminiumMaterial}>
-            <cylinderGeometry args={[0.22, 0.22, 0.18, 16]} />
-          </mesh>
-          {/* Suspension strut connecting to chassis */}
-          <mesh position={[0, 0.18, z > 0 ? -0.2 : 0.2]} material={blackStrutMaterial}>
-            <cylinderGeometry args={[0.02, 0.02, 0.42, 6]} />
+        <group key={idx} position={[x, y, z]} rotation={[Math.PI / 2, 0, 0]}>
+          <mesh material={aluminiumMaterial}>
+            <cylinderGeometry args={[0.22, 0.22, 0.14, 16]} />
           </mesh>
         </group>
       ))}
 
-      {/* High-Gain Dish Antenna */}
-      <mesh position={[-0.45, 1.05, -0.3]} rotation={[-0.4, 0.2, 0]} material={aluminiumMaterial}>
-        <sphereGeometry args={[0.28, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.45]} />
-      </mesh>
-
-      {/* Robotic Arm (Instrument Deployment Device) extending forward to rock */}
+      {/* Instrument Deployment Device (IDD) robotic arm */}
       <group position={[0.7, 0.45, 0]}>
-        <mesh position={[0.35, -0.15, 0]} rotation={[0, 0, -0.7]} material={blackStrutMaterial}>
-          <boxGeometry args={[0.06, 0.06, 0.7]} />
-        </mesh>
-        {/* Turret with Microscopic Imager */}
-        <mesh position={[0.7, -0.35, 0]} material={aluminiumMaterial}>
-          <boxGeometry args={[0.15, 0.15, 0.18]} />
+        <mesh position={[0.4, -0.15, 0]} rotation={[0, 0, -0.4]} material={aluminiumMaterial}>
+          <boxGeometry args={[0.75, 0.06, 0.06]} />
         </mesh>
       </group>
     </group>
+  )
+}
+
+export function OpportunityRover() {
+  return (
+    <NASA3DModel
+      url="/models/opportunity.glb"
+      scale={1.2}
+      position={[-8, -0.2, -8]}
+      fallback={<ProceduralOpportunityRover />}
+    />
   )
 }

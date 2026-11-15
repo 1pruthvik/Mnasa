@@ -83,3 +83,4 @@ This document audits and tracks scientific facts, coordinate frames, operational
 - **Orbit**: Earth-trailing heliocentric orbit (not Moon or Mars).
 - **Science Legacy**: Discovered **over 2,600 confirmed exoplanets** using the transit photometry technique.
 - **Mission Retirement**: Decommissioned 30 October 2018 after depleting onboard reaction control fuel.
+

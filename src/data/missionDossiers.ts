@@ -222,3 +222,4 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     sourceCitation: 'NASA Science Kepler Archive',
   },
 }
+

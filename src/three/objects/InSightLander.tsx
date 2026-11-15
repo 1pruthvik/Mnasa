@@ -1,3 +1,4 @@
+import { NASA3DModel } from '../components/NASA3DModel'
 import {
   solarPanelMaterial,
   whitePaintMaterial,
@@ -6,7 +7,7 @@ import {
   copperMaterial,
 } from '../systems/materials'
 
-export function InSightLander() {
+function ProceduralInSightLander() {
   return (
     <group position={[4, -0.2, -6]}>
       {/* Central Lander Deck and Body */}
@@ -49,21 +50,32 @@ export function InSightLander() {
         <mesh position={[0.4, -0.2, 0.3]} rotation={[0.4, 0.6, -0.6]} material={blackStrutMaterial}>
           <cylinderGeometry args={[0.03, 0.03, 1.2, 6]} />
         </mesh>
-        {/* Grapple Hand */}
-        <mesh position={[0.7, -0.55, 0.6]} material={aluminiumMaterial}>
-          <boxGeometry args={[0.1, 0.1, 0.1]} />
+      </group>
+
+      {/* SEIS Seismometer Wind and Thermal Shield (WTS) Dome on ground */}
+      <group position={[1.8, 0.05, 1.2]}>
+        <mesh material={copperMaterial} receiveShadow>
+          <sphereGeometry args={[0.35, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
         </mesh>
       </group>
 
-      {/* SEIS Dome Wind & Thermal Shield (WTS) deployed on the Martian ground */}
-      <mesh position={[1.4, 0.12, 1.1]} material={copperMaterial} castShadow receiveShadow>
-        <sphereGeometry args={[0.38, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
-      </mesh>
-
-      {/* HP3 Mole Heat Flow Probe housing & tether on the ground */}
-      <mesh position={[-1.2, 0.08, 1.2]} material={aluminiumMaterial}>
-        <boxGeometry args={[0.2, 0.14, 0.35]} />
-      </mesh>
+      {/* HP3 "Mole" Heat Flow Probe Support Structure on ground */}
+      <group position={[-1.6, 0.1, 1.0]}>
+        <mesh material={aluminiumMaterial}>
+          <boxGeometry args={[0.3, 0.2, 0.4]} />
+        </mesh>
+      </group>
     </group>
+  )
+}
+
+export function InSightLander() {
+  return (
+    <NASA3DModel
+      url="/models/insight.glb"
+      scale={1.2}
+      position={[4, -0.2, -6]}
+      fallback={<ProceduralInSightLander />}
+    />
   )
 }

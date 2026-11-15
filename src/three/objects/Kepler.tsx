@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { NASA3DModel } from '../components/NASA3DModel'
 import {
   solarPanelMaterial,
   silverFoilMaterial,
@@ -8,19 +9,9 @@ import {
   blackStrutMaterial,
 } from '../systems/materials'
 
-export function Kepler() {
-  const keplerRef = useRef<THREE.Group>(null!)
-
-  useFrame((_, dt) => {
-    if (keplerRef.current) {
-      // Slow tumble (~0.02 rad/s) as stated in the master script
-      keplerRef.current.rotation.x += dt * 0.015
-      keplerRef.current.rotation.y += dt * 0.02
-    }
-  })
-
+function ProceduralKepler() {
   return (
-    <group ref={keplerRef} position={[0, 0, -110]}>
+    <group>
       {/* Cylindrical Telescope Barrel with Silver MLI Thermal Wrap */}
       <mesh rotation={[Math.PI / 2, 0, 0]} material={silverFoilMaterial} castShadow>
         <cylinderGeometry args={[1.4, 1.4, 3.8, 24, 1, true]} />
@@ -48,23 +39,28 @@ export function Kepler() {
         <mesh material={aluminiumMaterial}>
           <cylinderGeometry args={[1.5, 1.5, 0.6, 12]} />
         </mesh>
-        {/* Reaction wheel pods */}
-        {[0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2].map((ang, idx) => (
-          <mesh
-            key={idx}
-            position={[Math.cos(ang) * 1.55, 0, Math.sin(ang) * 1.55]}
-            material={blackStrutMaterial}
-          >
-            <sphereGeometry args={[0.22, 8, 8]} />
-          </mesh>
-        ))}
       </group>
-
-      {/* Steerable High-Gain Dish Antenna */}
-      <mesh position={[1.6, -0.6, -1.5]} rotation={[0.5, 0.8, 0]} material={aluminiumMaterial}>
-        <sphereGeometry args={[0.5, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.4]} />
-      </mesh>
     </group>
   )
 }
 
+export function Kepler() {
+  const keplerRef = useRef<THREE.Group>(null!)
+
+  useFrame((_, dt) => {
+    if (keplerRef.current) {
+      keplerRef.current.rotation.x += dt * 0.015
+      keplerRef.current.rotation.y += dt * 0.02
+    }
+  })
+
+  return (
+    <group ref={keplerRef} position={[0, 0, -30]}>
+      <NASA3DModel
+        url="/models/kepler.glb"
+        scale={1.3}
+        fallback={<ProceduralKepler />}
+      />
+    </group>
+  )
+}

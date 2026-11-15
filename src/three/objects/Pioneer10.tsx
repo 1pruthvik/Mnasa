@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { NASA3DModel } from '../components/NASA3DModel'
 import {
   aluminiumMaterial,
   goldFoilMaterial,
@@ -8,18 +9,9 @@ import {
   copperMaterial,
 } from '../systems/materials'
 
-export function Pioneer10() {
-  const pioneerRef = useRef<THREE.Group>(null!)
-
-  useFrame((_, dt) => {
-    if (pioneerRef.current) {
-      // Very slow drift rotation as described in the script
-      pioneerRef.current.rotation.z += dt * 0.02
-    }
-  })
-
+function ProceduralPioneer10() {
   return (
-    <group ref={pioneerRef} position={[0, 0, -180]} rotation={[0.2, 0.4, 0]}>
+    <group rotation={[0.2, 0.4, 0]}>
       {/* 2.74-meter Parabolic High-Gain Antenna Dish pointing to Earth */}
       <mesh material={aluminiumMaterial} castShadow>
         <sphereGeometry args={[2.74, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.4]} />
@@ -48,27 +40,47 @@ export function Pioneer10() {
       {/* Two SNAP-19 RTG Power Units on Extended Truss Booms */}
       {[-1, 1].map((dir, idx) => (
         <group key={idx} position={[dir * 2.8, -0.4, -0.8]} rotation={[0, 0, dir * 0.2]}>
-          {/* Truss Boom */}
-          <mesh position={[-dir * 1.2, 0.2, 0]} rotation={[0, 0, Math.PI / 2]} material={blackStrutMaterial}>
-            <cylinderGeometry args={[0.03, 0.03, 2.4, 6]} />
-          </mesh>
-          {/* RTG Cylinders with Fins */}
           <mesh material={copperMaterial}>
-            <cylinderGeometry args={[0.22, 0.22, 0.65, 10]} />
+            <cylinderGeometry args={[0.22, 0.22, 0.58, 8]} />
+          </mesh>
+          {/* Boom strut */}
+          <mesh position={[-dir * 1.3, 0.2, 0.4]} rotation={[0, 0, dir * 0.3]} material={blackStrutMaterial}>
+            <cylinderGeometry args={[0.025, 0.025, 2.6, 4]} />
           </mesh>
         </group>
       ))}
 
-      {/* Magnetometer Boom extending far out */}
-      <mesh position={[0, 3.4, -0.8]} material={blackStrutMaterial}>
-        <cylinderGeometry args={[0.02, 0.02, 4.2, 6]} />
+      {/* Magnetometer 6.6-meter Boom */}
+      <mesh position={[0, 3.2, -0.8]} rotation={[0.2, 0, 0]} material={blackStrutMaterial}>
+        <cylinderGeometry args={[0.02, 0.02, 3.8, 4]} />
       </mesh>
 
-      {/* The Famous Golden Pioneer Plaque */}
-      <mesh position={[0.65, 0.2, -0.3]} rotation={[0, 0.3, 0]} material={goldFoilMaterial}>
-        <planeGeometry args={[0.55, 0.38]} />
-      </mesh>
+      {/* The Gold-Anodized Aluminum Plaque */}
+      <group position={[0.42, -0.5, 0.45]} rotation={[0.1, -0.2, 0]}>
+        <mesh material={goldFoilMaterial}>
+          <boxGeometry args={[0.46, 0.32, 0.02]} />
+        </mesh>
+      </group>
     </group>
   )
 }
 
+export function Pioneer10() {
+  const pioneerRef = useRef<THREE.Group>(null!)
+
+  useFrame((_, dt) => {
+    if (pioneerRef.current) {
+      pioneerRef.current.rotation.z += dt * 0.02
+    }
+  })
+
+  return (
+    <group ref={pioneerRef} position={[0, 0, -36]}>
+      <NASA3DModel
+        url="/models/pioneer10.glb"
+        scale={1.4}
+        fallback={<ProceduralPioneer10 />}
+      />
+    </group>
+  )
+}

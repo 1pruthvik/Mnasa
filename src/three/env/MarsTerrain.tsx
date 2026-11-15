@@ -1,9 +1,30 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
+import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import { useTexture } from '@react-three/drei'
 
 export function MarsTerrain() {
+  const { scene } = useThree()
+  const marsTexture = useTexture('/textures/mars.jpg')
+
+  useEffect(() => {
+    marsTexture.wrapS = THREE.RepeatWrapping
+    marsTexture.wrapT = THREE.RepeatWrapping
+    marsTexture.repeat.set(12, 12)
+    marsTexture.needsUpdate = true
+  }, [marsTexture])
+
+  useEffect(() => {
+    // Seamless Martian atmosphere fog
+    const prevFog = scene.fog
+    scene.fog = new THREE.FogExp2('#7c2d12', 0.007)
+    return () => {
+      scene.fog = prevFog
+    }
+  }, [scene])
+
   const { geometry, rockTransforms } = useMemo(() => {
-    const geom = new THREE.PlaneGeometry(320, 320, 128, 128)
+    const geom = new THREE.PlaneGeometry(450, 450, 160, 160)
     geom.rotateX(-Math.PI / 2)
 
     const pos = geom.attributes.position
@@ -20,10 +41,10 @@ export function MarsTerrain() {
 
       let y = duneWave + rollingPlains
 
-      // Rim edge falloff
+      // Rim edge curvature falloff matching the spherical horizon
       const edgeDist = Math.hypot(x, z)
-      if (edgeDist > 100) {
-        y -= Math.pow((edgeDist - 100) * 0.04, 2)
+      if (edgeDist > 90) {
+        y -= Math.pow((edgeDist - 90) * 0.04, 2)
       }
 
       pos.setY(i, y)
@@ -31,11 +52,11 @@ export function MarsTerrain() {
 
     geom.computeVertexNormals()
 
-    // Scatter 80 Martian basalt rocks
+    // Scatter 100 Martian basalt rocks
     const rockMatrices: THREE.Matrix4[] = []
-    for (let j = 0; j < 80; j++) {
-      const rx = (Math.random() - 0.5) * 180
-      const rz = (Math.random() - 0.5) * 180
+    for (let j = 0; j < 100; j++) {
+      const rx = (Math.random() - 0.5) * 240
+      const rz = (Math.random() - 0.5) * 240
       const scale = 0.25 + Math.random() * 0.9
       const mat = new THREE.Matrix4()
       mat.compose(
@@ -54,12 +75,14 @@ export function MarsTerrain() {
 
   return (
     <group position={[0, -2, 0]}>
-      {/* Red Martian Landscape */}
+      {/* Red Martian Landscape with NASA Mars Surface Texture */}
       <mesh geometry={geometry} receiveShadow>
         <meshStandardMaterial
-          color="#b45309"
+          map={marsTexture}
           roughness={0.92}
           metalness={0.06}
+          bumpMap={marsTexture}
+          bumpScale={0.14}
         />
       </mesh>
 
@@ -72,20 +95,19 @@ export function MarsTerrain() {
         }}
       >
         <dodecahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial color="#57291a" roughness={0.9} metalness={0.12} />
+        <meshStandardMaterial color="#431407" roughness={0.92} metalness={0.14} />
       </instancedMesh>
 
-      {/* Martian Atmospheric Sky Dome */}
+      {/* Martian Atmospheric Sky Dome covering whole horizon */}
       <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[260, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+        <sphereGeometry args={[320, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
         <meshBasicMaterial
-          color="#9a3412"
+          color="#7c2d12"
           side={THREE.BackSide}
           transparent
-          opacity={0.32}
+          opacity={0.45}
         />
       </mesh>
     </group>
   )
 }
-

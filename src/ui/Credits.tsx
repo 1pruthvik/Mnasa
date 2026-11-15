@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { SOURCES } from '../data/sources'
+import { ASSET_MANIFEST } from '../data/assets'
 import { UI_COPY } from '../data/ui-copy'
 import { X, ShieldCheck } from 'lucide-react'
 
@@ -55,6 +56,19 @@ export const Credits: React.FC<CreditsProps> = ({ isOpen, onClose }) => {
                   >
                     {s.label}
                   </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="border-t border-[#dfe3ea] pt-3 space-y-2">
+            <h3 className="font-bold text-slate-900 uppercase text-[11px] tracking-wider">
+              3D Models & Planetary Science Maps
+            </h3>
+            <ul className="space-y-1 list-disc list-inside text-slate-700 text-[11px]">
+              {ASSET_MANIFEST.map((a) => (
+                <li key={a.id} className="leading-snug">
+                  <strong>{a.name}:</strong> {a.attribution} ({a.source}, {a.license})
                 </li>
               ))}
             </ul>

@@ -1,3 +1,4 @@
+import { NASA3DModel } from '../components/NASA3DModel'
 import {
   whitePaintMaterial,
   aluminiumMaterial,
@@ -5,7 +6,7 @@ import {
   blackStrutMaterial,
 } from '../systems/materials'
 
-export function VikingLander() {
+function ProceduralVikingLander() {
   return (
     <group position={[0, -0.2, 0]}>
       {/* Hexagonal Main Body Bus with thermal insulation blankets */}
@@ -48,20 +49,23 @@ export function VikingLander() {
         <sphereGeometry args={[0.48, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.4]} />
       </mesh>
 
-      {/* Meteorology Boom Mast */}
-      <mesh position={[-0.9, 1.7, 0.6]} material={aluminiumMaterial}>
-        <cylinderGeometry args={[0.025, 0.025, 1.2, 6]} />
-      </mesh>
-
-      {/* Surface Sampler Collector Arm (Trenching tool) */}
-      <group position={[0.7, 0.8, 0.9]}>
-        <mesh position={[0.4, -0.2, 0.4]} rotation={[0.4, 0.6, -0.3]} material={aluminiumMaterial}>
-          <boxGeometry args={[0.08, 0.08, 1.4]} />
-        </mesh>
-        <mesh position={[0.8, -0.6, 0.8]} material={blackStrutMaterial}>
-          <boxGeometry args={[0.16, 0.1, 0.2]} />
+      {/* Surface Soil Collector Sampler Arm extended */}
+      <group position={[0.8, 0.8, 0.8]}>
+        <mesh position={[0.7, -0.2, 0.4]} rotation={[0.3, 0.5, -0.4]} material={blackStrutMaterial}>
+          <boxGeometry args={[0.08, 0.08, 1.8]} />
         </mesh>
       </group>
     </group>
+  )
+}
+
+export function VikingLander() {
+  return (
+    <NASA3DModel
+      url="/models/viking-lander.glb"
+      scale={1.3}
+      position={[0, -0.2, 0]}
+      fallback={<ProceduralVikingLander />}
+    />
   )
 }

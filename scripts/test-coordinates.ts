@@ -67,3 +67,4 @@ console.log(`Calculated Apollo 12 to Surveyor 3 distance: ${(distKm * 1000).toFi
 assert('Distance is between 100m and 300m', distKm > 0.1 && distKm < 0.3)
 
 console.log('✓ All coordinate tests passed successfully!')
+

@@ -1,3 +1,4 @@
+import { NASA3DModel } from '../components/NASA3DModel'
 import {
   solarPanelMaterial,
   goldFoilMaterial,
@@ -5,7 +6,7 @@ import {
   blackStrutMaterial,
 } from '../systems/materials'
 
-export function NEARShoemaker() {
+function ProceduralNEARShoemaker() {
   return (
     <group position={[-40, -4.8, -10]}>
       {/* Octagonal Main Spacecraft Bus */}
@@ -39,5 +40,16 @@ export function NEARShoemaker() {
         <cylinderGeometry args={[0.02, 0.02, 1.4, 6]} />
       </mesh>
     </group>
+  )
+}
+
+export function NEARShoemaker() {
+  return (
+    <NASA3DModel
+      url="/models/near.glb"
+      scale={1.3}
+      position={[-40, -4.8, -10]}
+      fallback={<ProceduralNEARShoemaker />}
+    />
   )
 }
