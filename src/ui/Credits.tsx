@@ -65,7 +65,7 @@ export const Credits: React.FC<CreditsProps> = ({ isOpen, onClose }) => {
               Audio & Imagery Credits
             </h3>
             <p className="text-slate-700 leading-relaxed text-[11px]">
-              <strong>Spacecraft models:</strong> NASA 3D Resources: <a className="text-blue-700 underline" href="https://github.com/nasa/NASA-3D-Resources" target="_blank" rel="noreferrer">Apollo Lunar Module, Viking, Opportunity, InSight, Ingenuity, Dawn, NEAR Shoemaker, Pioneer 10 and Kepler</a>. Models are illustrations, with procedural fallbacks.
+              <strong>Spacecraft models:</strong> NASA 3D Resources: <a className="text-blue-700 underline" href="https://github.com/nasa/NASA-3D-Resources" target="_blank" rel="noreferrer">Apollo Lunar Module, Viking, Opportunity, InSight, Ingenuity, Dawn, NEAR Shoemaker, Pioneer 10 and Kepler</a>. Pathfinder and Sojourner: illustrative 3D model by <a className="text-blue-700 underline" href="https://github.com/Sara-Managed-Projects/space-radar" target="_blank" rel="noreferrer">Space Radar contributors</a> (MIT). Models are illustrations, with procedural fallbacks.
             </p>
             <p className="text-slate-700 leading-relaxed text-[11px]">
               <strong>Planet imagery:</strong> NASA 3D Resources (Earth relief, Mars, Venus and Jupiter); lunar globe from NASA SVS LROC/LOLA Moon Kit. Global maps are historical or illustrative, not live. Earth and Venus use visualization colors. The spiral galaxy artwork is AI-generated, not a photograph of the Milky Way.

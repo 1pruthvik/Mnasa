@@ -2,7 +2,7 @@ import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { AtlasGlobe, type World } from '../three/env/AtlasGlobe'
-import { NasaModel } from '../three/objects/NasaModel'
+import { IllustrationModel } from '../three/objects/NasaModel'
 
 const items = {
   earth: { name: 'Earth', note: 'NASA global relief map, shown in elevation colors. Not a live view or natural-color image.', source: 'https://github.com/nasa/NASA-3D-Resources/tree/master/Images%20and%20Textures/Earth%20(A)' },
@@ -13,6 +13,7 @@ const items = {
   sun: { name: 'Sun', note: 'A schematic glowing sphere, not an observational solar surface map or live view.', source: 'https://science.nasa.gov/sun/' },
   apollo: { name: 'Apollo lunar module', model: 'apollo-lunar-module', note: 'NASA model of the lunar module. A representation, not its present condition.', source: 'https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Apollo%20Lunar%20Module' },
   viking: { name: 'Viking lander', model: 'viking-lander', note: 'NASA spacecraft model. A representation, not a survey of its present condition.', source: 'https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Viking%20Lander' },
+  pathfinder: { name: 'Pathfinder and Sojourner', model: 'pathfinder-sojourner', note: 'Illustrative model by Space Radar, built from published dimensions and reference photographs. Details are simplified; not a live view or a reconstruction of current condition.', source: 'https://github.com/Sara-Managed-Projects/space-radar/blob/main/CREDITS.md#3b-r14-m8-four-landers-built-from-dimensions--luna-16-mars-pathfinder-and-sojourner-phoenix-mars-3-2026-10-27' },
   opportunity: { name: 'Opportunity rover', model: 'opportunity', note: 'NASA low-poly rover model. Not its present condition.', source: 'https://github.com/nasa/NASA-3D-Resources' },
   insight: { name: 'InSight lander', model: 'insight', note: 'NASA spacecraft model. Not its present condition.', source: 'https://github.com/nasa/NASA-3D-Resources' },
   ingenuity: { name: 'Ingenuity helicopter', model: 'ingenuity', note: 'NASA spacecraft model. Not its present condition.', source: 'https://github.com/nasa/NASA-3D-Resources' },
@@ -26,12 +27,14 @@ export function itemForScene(scene: string, overview: boolean): ExplorerItem {
   if (scene === '0.2') return 'earth'
   if (scene.startsWith('1.')) return scene === '1.1' && !overview ? 'apollo' : 'moon'
   if (scene === '2.1') return overview ? 'mars' : 'viking'
-  return ({ '0.1': 'sun', '2.2': 'mars', '3.1': 'opportunity', '3.2': 'insight', '3.3': 'ingenuity', '4.1': 'dawn', '4.2': 'near', '5.1': 'pioneer', '5.2': 'kepler' } as Record<string, ExplorerItem>)[scene] || 'moon'
+  return ({ '0.1': 'sun', '2.2': 'pathfinder', '3.1': 'opportunity', '3.2': 'insight', '3.3': 'ingenuity', '4.1': 'dawn', '4.2': 'near', '5.1': 'pioneer', '5.2': 'kepler' } as Record<string, ExplorerItem>)[scene] || 'moon'
 }
+
+const initialRotation = (item: ExplorerItem) => item === 'pathfinder' ? { x: .38, y: -.55 } : { x: 0, y: 0 }
 
 export function ModelExplorer({ initial, onClose }: { initial: ExplorerItem; onClose: () => void }) {
   const [item, setItem] = useState<ExplorerItem>(initial)
-  const [rotation, setRotation] = useState({ x: 0, y: 0 })
+  const [rotation, setRotation] = useState(() => initialRotation(initial))
   const drag = useRef<{ x: number; y: number } | null>(null)
   const close = useRef<HTMLButtonElement>(null)
   const dialog = useRef<HTMLDivElement>(null)
@@ -63,14 +66,14 @@ export function ModelExplorer({ initial, onClose }: { initial: ExplorerItem; onC
           <Canvas camera={{ position: [0, 0, 10], fov: 40 }} dpr={[1, 1.5]} gl={{ antialias: true }}>
             <ambientLight intensity={1.1} /><directionalLight position={[5, 6, 8]} intensity={2.5} />
             <Suspense fallback={null}><group rotation={[rotation.x, rotation.y, 0]}>
-              {'model' in entry ? <NasaModel key={item} url={`/models/${entry.model}.glb`} size={4} position={[0, 0, 0]} ground={false} fallback={null} /> : item === 'sun' ? <mesh><sphereGeometry args={[2.5, 64, 48]} /><meshBasicMaterial color="#ffb34c" /></mesh> : <AtlasGlobe world={item as World} radius={2.5} />}
+              {'model' in entry ? <IllustrationModel key={item} url={`/models/${entry.model}.glb`} size={item === 'pathfinder' ? 5.6 : 4} position={[0, 0, 0]} ground={false} fallback={null} /> : item === 'sun' ? <mesh><sphereGeometry args={[2.5, 64, 48]} /><meshBasicMaterial color="#ffb34c" /></mesh> : <AtlasGlobe world={item as World} radius={2.5} />}
             </group></Suspense>
           </Canvas>
           <div className="explorer-drag">DRAG TO ROTATE</div>
         </div>
-        <div className="explorer-info"><label htmlFor="explorer-select">CHOOSE A SUBJECT</label><select id="explorer-select" value={item} onChange={e => { setItem(e.target.value as ExplorerItem); setRotation({ x: 0, y: 0 }) }}>{Object.entries(items).map(([id, data]) => <option key={id} value={id}>{data.name}</option>)}</select>
+        <div className="explorer-info"><label htmlFor="explorer-select">CHOOSE A SUBJECT</label><select id="explorer-select" value={item} onChange={e => { const next = e.target.value as ExplorerItem; setItem(next); setRotation(initialRotation(next)) }}>{Object.entries(items).map(([id, data]) => <option key={id} value={id}>{data.name}</option>)}</select>
           <h3>{entry.name}</h3><p>{entry.note}</p><a href={entry.source} target="_blank" rel="noreferrer">About the source ↗</a>
-          <div className="explorer-rotate" aria-label="Rotate model"><button onClick={() => turn(0, -.35)} aria-label="Rotate left">←</button><button onClick={() => turn(-.35, 0)} aria-label="Rotate up">↑</button><button onClick={() => turn(.35, 0)} aria-label="Rotate down">↓</button><button onClick={() => turn(0, .35)} aria-label="Rotate right">→</button><button onClick={() => setRotation({ x: 0, y: 0 })}>Reset</button></div>
+          <div className="explorer-rotate" aria-label="Rotate model"><button onClick={() => turn(0, -.35)} aria-label="Rotate left">←</button><button onClick={() => turn(-.35, 0)} aria-label="Rotate up">↑</button><button onClick={() => turn(.35, 0)} aria-label="Rotate down">↓</button><button onClick={() => turn(0, .35)} aria-label="Rotate right">→</button><button onClick={() => setRotation(initialRotation(item))}>Reset</button></div>
           <p className="explorer-caption">Drag with a mouse or finger, or use the rotation buttons. The story pauses while you explore.</p>
         </div>
       </div>

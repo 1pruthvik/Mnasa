@@ -32,6 +32,9 @@ class ModelBoundary extends Component<{ fallback: ReactNode; children: ReactNode
   static getDerivedStateFromError() { return { failed: true } }
   render() { return this.state.failed ? this.props.fallback : this.props.children }
 }
-export function NasaModel(props: ModelProps & { fallback: ReactNode }) {
+export function IllustrationModel(props: ModelProps & { fallback: ReactNode }) {
   return <ModelBoundary fallback={props.fallback}><Suspense fallback={props.fallback}><Model {...props} /></Suspense></ModelBoundary>
 }
+
+// Existing NASA assets use the same loader and fallback behavior.
+export const NasaModel = IllustrationModel

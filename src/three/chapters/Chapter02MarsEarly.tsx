@@ -1,7 +1,7 @@
 import { useStore } from '../../store'
 import { isWorldOverview } from '../../data/experience'
 import { MarsGlobe } from '../env/MarsGlobe'
-import { NasaModel } from '../objects/NasaModel'
+import { IllustrationModel, NasaModel } from '../objects/NasaModel'
 import { MarsTerrain } from '../env/MarsTerrain'
 import { VikingLander } from '../objects/VikingLander'
 import { PathfinderLander } from '../objects/PathfinderLander'
@@ -35,7 +35,7 @@ export function Chapter02MarsEarly() {
       {scene === '2.1' && <NasaModel url="/models/viking-lander.glb" position={[0, -0.2, 0]} size={5.5} fallback={<VikingLander />} />}
 
       {/* Pathfinder Lander & Sojourner Rover at Ares Vallis */}
-      {scene === '2.2' && <PathfinderLander />}
+      {scene === '2.2' && <IllustrationModel url="/models/pathfinder-sojourner.glb" position={[8, -0.2, -6]} size={7.5} fallback={<PathfinderLander />} />}
     </group>
   )
 }

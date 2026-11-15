@@ -44,7 +44,7 @@ export const Overlay: React.FC<OverlayProps> = ({ onScrollToScene, onOpenDetails
   else if (beat.sceneId === '1.1') visualCredit = 'LANDING CONFIGURATION · ILLUSTRATION'
   else if (beat.sceneId.startsWith('6.')) visualCredit = 'GLOBAL MAPS · EARTH RELIEF COLORS · NOT TO SCALE'
   const surfaceWorld = !worldOverview && !route && beat.sceneId.startsWith('1.') ? 'moon' : !worldOverview && !route && (beat.sceneId.startsWith('2.') || beat.sceneId.startsWith('3.')) ? 'mars' : null
-  if (surfaceWorld) visualCredit = 'PHOTO-TEXTURED TERRAIN · ILLUSTRATIVE'
+  if (surfaceWorld) visualCredit = beat.sceneId === '2.2' ? 'SPACE RADAR MODEL · NASA PHOTO-TEXTURED TERRAIN' : 'PHOTO-TEXTURED TERRAIN · ILLUSTRATIVE'
   if (route) visualCredit = 'GLOBAL MAPS · TRANSIT ILLUSTRATION, NOT TO SCALE'
   const [inventoryOpen, setInventoryOpen] = useState(false)
 

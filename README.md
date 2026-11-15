@@ -1,6 +1,6 @@
 # Abandoned, but not forgotten
 
-An experimental, interactive story about NASA machines and the discoveries they left behind. Explore 17 scenes from the Moon to Mars and beyond, inspired by the cinematic orientation and exploratory spirit of Martian Map. The spacecraft and landscapes are **illustrative 3D models**, not exact, current depictions of their locations or condition. Apollo Lunar Module, Viking, Opportunity, InSight, Ingenuity, Dawn, NEAR, Pioneer 10 and Kepler use NASA 3D Resources models with procedural fallbacks; see `public/models/ATTRIBUTION.md`.
+An experimental, interactive story about NASA machines and the discoveries they left behind. Explore 17 scenes from the Moon to Mars and beyond, inspired by the cinematic orientation and exploratory spirit of Martian Map. The spacecraft and landscapes are **illustrative 3D models**, not exact, current depictions of their locations or condition. Apollo Lunar Module, Viking, Opportunity, InSight, Ingenuity, Dawn, NEAR, Pioneer 10 and Kepler use NASA 3D Resources models with procedural fallbacks; Pathfinder and Sojourner use a model by Space Radar contributors (MIT); see `public/models/ATTRIBUTION.md`.
 
 ## Run locally
 

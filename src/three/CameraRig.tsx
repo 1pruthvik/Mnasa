@@ -15,7 +15,7 @@ const SHOTS: Record<string, { pos: [number, number, number]; target: [number, nu
   '1.3': { pos: [29, 4, 19], target: [22, 0.8, 8], fov: 45 },
   '1.4': { pos: [32, 4, 21], target: [25, 0.5, 11], fov: 45 },
   '2.1': { pos: [7, 4, 11], target: [0, 1, 0], fov: 44 },
-  '2.2': { pos: [15, 4, 5], target: [8, 0.8, -6], fov: 46 },
+  '2.2': { pos: [13.5, 4, 3.4], target: [8, 0, -6], fov: 44 },
   '3.1': { pos: [-1, 4, 2], target: [-8, 1, -8], fov: 45 },
   '3.2': { pos: [12, 5, 7], target: [4, 0.8, -6], fov: 46 },
   '3.3': { pos: [11, 11, 3], target: [8, 9.2, -2], fov: 46 },
@@ -34,6 +34,7 @@ export default function CameraRig() {
   useFrame(() => {
     const state = useStore.getState()
     const shot = state.activeSceneId === '2.1' && isWorldOverview(state.progress) ? { pos: [0, 1, 16] as [number, number, number], target: [0, 0, 0] as [number, number, number], fov: 42 } : SHOTS[state.activeSceneId] || SHOTS['0.1']
+    const mobilePathfinder = size.width < 768 && state.activeSceneId === '2.2'
     const route = travelAt(state.progress)
     if (route) {
       const fraction = travelFraction(state.progress, route)
@@ -41,6 +42,10 @@ export default function CameraRig() {
       // Pull back to keep both destinations in view during the crossing.
       position.set(x, 1, 18 + Math.sin(Math.PI * fraction) * 16)
       target.set(x, 0, 0)
+    } else if (mobilePathfinder) {
+      // Leave room for the narrative card without hiding the small rover.
+      position.set(16, 5, 8)
+      target.set(8, .5, -6)
     } else {
       position.set(...shot.pos)
       target.set(...shot.target)
@@ -50,7 +55,7 @@ export default function CameraRig() {
     camera.lookAt(target)
     const perspective = camera as THREE.PerspectiveCamera
     // Shift the principal point so the subject sits clear of the story panel.
-    perspective.setViewOffset(size.width, size.height, size.width >= 768 ? -size.width * 0.18 : 0, size.width < 768 ? size.height * 0.12 : 0, size.width, size.height)
+    perspective.setViewOffset(size.width, size.height, size.width >= 768 ? -size.width * 0.18 : 0, size.width < 768 ? size.height * (mobilePathfinder ? 0.2 : 0.12) : 0, size.width, size.height)
     perspective.fov = size.width < 768 ? (route ? 54 : shot.fov + 12) : (route ? 42 : shot.fov)
     perspective.updateProjectionMatrix()
   })
