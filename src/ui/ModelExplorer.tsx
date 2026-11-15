@@ -32,7 +32,7 @@ export function itemForScene(scene: string, overview: boolean): ExplorerItem {
 
 const initialRotation = (item: ExplorerItem) => item === 'pathfinder' ? { x: .38, y: -.55 } : { x: 0, y: 0 }
 
-export function ModelExplorer({ initial, onClose }: { initial: ExplorerItem; onClose: () => void }) {
+export function ModelExplorer({ initial, onClose, onRotateScene }: { initial: ExplorerItem; onClose: () => void; onRotateScene: () => void }) {
   const [item, setItem] = useState<ExplorerItem>(initial)
   const [rotation, setRotation] = useState(() => initialRotation(initial))
   const drag = useRef<{ x: number; y: number } | null>(null)
@@ -72,6 +72,7 @@ export function ModelExplorer({ initial, onClose }: { initial: ExplorerItem; onC
           <div className="explorer-drag">DRAG TO ROTATE</div>
         </div>
         <div className="explorer-info"><label htmlFor="explorer-select">CHOOSE A SUBJECT</label><select id="explorer-select" value={item} onChange={e => { const next = e.target.value as ExplorerItem; setItem(next); setRotation(initialRotation(next)) }}>{Object.entries(items).map(([id, data]) => <option key={id} value={id}>{data.name}</option>)}</select>
+          <button className="explorer-in-scene" onClick={onRotateScene}>Rotate the story scene ↗</button>
           <h3>{entry.name}</h3><p>{entry.note}</p><a href={entry.source} target="_blank" rel="noreferrer">About the source ↗</a>
           <div className="explorer-rotate" aria-label="Rotate model"><button onClick={() => turn(0, -.35)} aria-label="Rotate left">←</button><button onClick={() => turn(-.35, 0)} aria-label="Rotate up">↑</button><button onClick={() => turn(.35, 0)} aria-label="Rotate down">↓</button><button onClick={() => turn(0, .35)} aria-label="Rotate right">→</button><button onClick={() => setRotation(initialRotation(item))}>Reset</button></div>
           <p className="explorer-caption">Drag with a mouse or finger, or use the rotation buttons. The story pauses while you explore.</p>

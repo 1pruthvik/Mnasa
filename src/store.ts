@@ -39,6 +39,7 @@ export interface AppState {
   labelsOn: boolean
   audioUnlocked: boolean
   labelPositions: Record<string, LabelPos>
+  sceneOrbit: { yaw: number; pitch: number }
 
   setProgress: (p: number) => void
   setPerfLevel: (l: PerfLevel) => void
@@ -52,6 +53,8 @@ export interface AppState {
   setLabelsOn: (v: boolean) => void
   unlockAudio: () => void
   setLabelPositions: (p: Record<string, LabelPos>) => void
+  turnScene: (yaw: number, pitch: number) => void
+  resetSceneOrbit: () => void
 }
 
 const initialBeat = beatAt(0)
@@ -79,6 +82,7 @@ export const useStore = create<AppState>((set, get) => ({
   labelsOn: true,
   audioUnlocked: false,
   labelPositions: {},
+  sceneOrbit: { yaw: 0, pitch: 0 },
 
   setProgress: (p) => {
     const q = Math.min(1, Math.max(0, p))
@@ -119,5 +123,7 @@ export const useStore = create<AppState>((set, get) => ({
   setLabelsOn: (v) => set({ labelsOn: v }),
   unlockAudio: () => set({ audioUnlocked: true }),
   setLabelPositions: (p) => set({ labelPositions: p }),
+  turnScene: (yaw, pitch) => set((s) => ({ sceneOrbit: { yaw: s.sceneOrbit.yaw + yaw, pitch: Math.max(-0.85, Math.min(0.85, s.sceneOrbit.pitch + pitch)) } })),
+  resetSceneOrbit: () => set({ sceneOrbit: { yaw: 0, pitch: 0 } }),
 }))
 

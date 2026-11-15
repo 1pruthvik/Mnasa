@@ -31,6 +31,8 @@ export default function CameraRig() {
   const { camera, size } = useThree()
   const position = useMemo(() => new THREE.Vector3(), [])
   const target = useMemo(() => new THREE.Vector3(), [])
+  const offset = useMemo(() => new THREE.Vector3(), [])
+  const spherical = useMemo(() => new THREE.Spherical(), [])
   useFrame(() => {
     const state = useStore.getState()
     const shot = state.activeSceneId === '2.1' && isWorldOverview(state.progress) ? { pos: [0, 1, 16] as [number, number, number], target: [0, 0, 0] as [number, number, number], fov: 42 } : SHOTS[state.activeSceneId] || SHOTS['0.1']
@@ -49,6 +51,14 @@ export default function CameraRig() {
     } else {
       position.set(...shot.pos)
       target.set(...shot.target)
+    }
+    const { yaw, pitch } = state.sceneOrbit
+    if (yaw !== 0 || pitch !== 0) {
+      // Orbit the camera, not the terrain or the spacecraft's physical placement.
+      spherical.setFromVector3(offset.copy(position).sub(target))
+      spherical.theta -= yaw
+      spherical.phi = THREE.MathUtils.clamp(spherical.phi + pitch, .15, Math.PI / 2 - .02)
+      position.copy(offset.setFromSpherical(spherical).add(target))
     }
     camera.position.copy(position)
     camera.up.set(0, 1, 0)
