@@ -17,6 +17,14 @@ import { DescentLadder } from './widgets/DescentLadder'
 import { SignalDelay } from './widgets/SignalDelay'
 import { PlaqueViewer } from './widgets/PlaqueViewer'
 import { TransitDemo } from './widgets/TransitDemo'
+import { FootpadScale } from './widgets/FootpadScale'
+import { SurveyorRuler } from './widgets/SurveyorRuler'
+import { BatteryBadge } from './widgets/BatteryBadge'
+import { VikingInstruments } from './widgets/VikingInstruments'
+import { DustSlider } from './widgets/DustSlider'
+import { TwoWorldsPanel } from './widgets/TwoWorldsPanel'
+import { SpeedComparison } from './widgets/SpeedComparison'
+import { KayakExplainer } from './widgets/KayakExplainer'
 import { LunarMap } from './LunarMap'
 import { MarsMap } from './MarsMap'
 
@@ -70,11 +78,24 @@ export const FallbackStory: React.FC = () => {
               {/* Static Widgets */}
               <div className="pt-4 flex flex-col gap-4">
                 {beat.sceneId === '0.2' && <FactDrawer />}
-                {beat.sceneId === '1.2' && <LunarMap />}
+                {beat.sceneId === '1.1' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FootpadScale />
+                  </div>
+                )}
+                {beat.sceneId === '1.2' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <LunarMap />
+                    <SurveyorRuler />
+                  </div>
+                )}
                 {beat.sceneId === '1.3' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Odometer />
                     <RtgDiagram />
+                    <div className="md:col-span-2">
+                      <BatteryBadge />
+                    </div>
                   </div>
                 )}
                 {beat.sceneId === '1.4' && <DateSlider />}
@@ -82,6 +103,9 @@ export const FallbackStory: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <WeatherLog />
                     <MarsMap />
+                    <div className="md:col-span-2">
+                      <VikingInstruments />
+                    </div>
                   </div>
                 )}
                 {beat.sceneId === '2.2' && (
@@ -90,17 +114,33 @@ export const FallbackStory: React.FC = () => {
                     <RangeComparison />
                   </div>
                 )}
-                {beat.sceneId === '3.1' && <OdometerWall />}
+                {beat.sceneId === '3.1' && (
+                  <div className="space-y-4">
+                    <OdometerWall />
+                    <DustSlider />
+                  </div>
+                )}
                 {beat.sceneId === '3.2' && <VitalSigns />}
                 {beat.sceneId === '3.3' && <FlightCounter />}
-                {beat.sceneId === '4.2' && <DescentLadder />}
+                {beat.sceneId === '4.1' && <TwoWorldsPanel />}
+                {beat.sceneId === '4.2' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <DescentLadder />
+                    <SpeedComparison />
+                  </div>
+                )}
                 {beat.sceneId === '5.1' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <SignalDelay />
                     <PlaqueViewer />
                   </div>
                 )}
-                {beat.sceneId === '5.2' && <TransitDemo />}
+                {beat.sceneId === '5.2' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <TransitDemo />
+                    <KayakExplainer />
+                  </div>
+                )}
                 {beat.sceneId === '6.1' && <InventoryTable />}
               </div>
             </section>

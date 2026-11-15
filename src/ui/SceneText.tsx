@@ -19,6 +19,14 @@ import { DescentLadder } from './widgets/DescentLadder'
 import { SignalDelay } from './widgets/SignalDelay'
 import { PlaqueViewer } from './widgets/PlaqueViewer'
 import { TransitDemo } from './widgets/TransitDemo'
+import { FootpadScale } from './widgets/FootpadScale'
+import { SurveyorRuler } from './widgets/SurveyorRuler'
+import { BatteryBadge } from './widgets/BatteryBadge'
+import { VikingInstruments } from './widgets/VikingInstruments'
+import { DustSlider } from './widgets/DustSlider'
+import { TwoWorldsPanel } from './widgets/TwoWorldsPanel'
+import { SpeedComparison } from './widgets/SpeedComparison'
+import { KayakExplainer } from './widgets/KayakExplainer'
 import { useReveal } from './motion/useReveal'
 
 interface SceneTextProps {
@@ -73,23 +81,44 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, first, last })
       {last && (
         <div data-reveal className="mt-2 flex flex-col gap-3">
           {beat.sceneId === '0.2' && <FactDrawer />}
-          {beat.sceneId === '1.1' && <StillWorkingToggle />}
-          {beat.sceneId === '1.2' && <MoonquakeWaveform />}
+          {beat.sceneId === '1.1' && (
+            <>
+              <StillWorkingToggle />
+              <FootpadScale />
+            </>
+          )}
+          {beat.sceneId === '1.2' && (
+            <>
+              <MoonquakeWaveform />
+              <SurveyorRuler />
+            </>
+          )}
           {beat.sceneId === '1.3' && (
             <>
               <Odometer />
               <RtgDiagram />
+              <BatteryBadge />
             </>
           )}
           {beat.sceneId === '1.4' && <DateSlider />}
-          {beat.sceneId === '2.1' && <WeatherLog />}
+          {beat.sceneId === '2.1' && (
+            <>
+              <WeatherLog />
+              <VikingInstruments />
+            </>
+          )}
           {beat.sceneId === '2.2' && (
             <>
               <BounceCounter />
               <RangeComparison />
             </>
           )}
-          {beat.sceneId === '3.1' && <OdometerWall />}
+          {beat.sceneId === '3.1' && (
+            <>
+              <OdometerWall />
+              <DustSlider />
+            </>
+          )}
           {beat.sceneId === '3.2' && (
             <>
               <VitalSigns />
@@ -97,14 +126,25 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, first, last })
             </>
           )}
           {beat.sceneId === '3.3' && <FlightCounter />}
-          {beat.sceneId === '4.2' && <DescentLadder />}
+          {beat.sceneId === '4.1' && <TwoWorldsPanel />}
+          {beat.sceneId === '4.2' && (
+            <>
+              <DescentLadder />
+              <SpeedComparison />
+            </>
+          )}
           {beat.sceneId === '5.1' && (
             <>
               <SignalDelay />
               <PlaqueViewer />
             </>
           )}
-          {beat.sceneId === '5.2' && <TransitDemo />}
+          {beat.sceneId === '5.2' && (
+            <>
+              <TransitDemo />
+              <KayakExplainer />
+            </>
+          )}
         </div>
       )}
     </article>

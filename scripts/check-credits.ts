@@ -31,3 +31,4 @@ if (errors === 0) {
   console.error(`Found ${errors} credit verification errors.`)
   process.exit(1)
 }
+
