@@ -114,3 +114,32 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid
 @media(max-width:767px) { .travel-label { right: 15px; top: 65px; font-size: 8px; } }
 
 .scene-source-links { display: flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* Editorial typography and a quieter, more focused reading surface. */
+html, body { font-family: 'Inter Variable', Inter, system-ui, sans-serif; }
+.welcome h1, .story-card h2, .explorer-header h2, .explorer-info h3 { font-family: 'Manrope Variable', 'Inter Variable', system-ui, sans-serif; font-weight: 600; letter-spacing: -.045em; }
+.welcome h1 { font-size: clamp(3.2rem, 5.6vw, 5.6rem); line-height: 1.02; }
+.welcome h1 em { font-style: normal; font-weight: 500; }
+.welcome-content > p { max-width: 455px; color: #c4c9ce; line-height: 1.7; }
+.welcome-top, .welcome-bottom, .welcome-eyebrow, .welcome-meta, .welcome-route, .scene-location, .story-top, .story-brand span, .menu-trigger, .chapter-rail button, .player-status, .player-actions label, .scroll-hint, .travel-label, .explorer-header span, .explorer-info label, .explorer-drag { font-family: 'Inter Variable', Inter, system-ui, sans-serif; }
+.welcome-meta, .welcome-route, .scene-location, .chapter-rail button, .player-status, .visual-credit { letter-spacing: .08em; }
+.story-card h2 { font-size: clamp(28px, 2.8vw, 42px); line-height: 1.12; }
+.story-card article, .story-card article > p, .inventory-intro p { font-family: 'Inter Variable', Inter, system-ui, sans-serif; }
+.story-card article > p, .inventory-intro p { line-height: 1.7; }
+.scene-details { border-top: 1px solid #ffffff24; margin-top: 2px; padding-top: 13px; }
+.scene-details summary { align-items: center; font-size: 12px; font-weight: 550; color: #d8dedf; }
+.scene-details-content { margin-top: 14px; }
+.scene-fact { margin: 0 0 5px; padding: 0 0 14px; border: 0; border-bottom: 1px solid #ffffff20; }
+.scene-fact p { margin-bottom: 10px; font-size: 13px; }
+.scene-source { justify-content: flex-start; }.scene-source-links { justify-content: flex-start; }
+.model-open { display: inline-flex; align-items: center; gap: 5px; border: 0; padding: 0; margin-top: 15px; font-size: 12px; font-weight: 600; color: #e5c1a3; }
+.model-open span { margin-left: 3px; }.model-open:hover { color: #fff; background: transparent; text-decoration: underline; text-underline-offset: 4px; }
+.visual-credit { margin-top: 18px; color: #99a4ac; font: 500 9px/1.5 'Inter Variable', sans-serif; letter-spacing: .05em; }
+.player { padding: 8px 12px; gap: 14px; border-radius: 4px; }.player-status { font-size: 10px; font-weight: 600; }.player-actions { gap: 9px; }.player-actions button { display: grid; place-items: center; min-width: 32px; min-height: 32px; border-radius: 3px; }.player-actions button:hover { background: #ffffff16; }.player-actions label { font-size: 11px; }.player-actions select { font: 600 11px 'Inter Variable', sans-serif; padding: 7px; }
+.chapter-rail button { font-weight: 600; font-size: 10px; letter-spacing: .06em; }
+@media(max-width:767px) {
+  .welcome h1 { font-size: clamp(3rem, 11vw, 4.4rem); }.welcome-route { font-size: 9px; }
+  .story-card h2 { font-size: 26px; line-height: 1.12; }.story-card article > p, .inventory-intro p { font-size: 13px; line-height: 1.6; }
+  .story-card article { gap: 10px; }.visual-credit { margin-top: 13px; font-size: 9px; }.scene-fact p { font-size: 12px; }
+  .player { left: auto; right: 10px; bottom: 58px; gap: 6px; padding: 5px 7px; }.player-status { font-size: 9px; }.player-actions { gap: 2px; }.player-actions button { min-width: 30px; min-height: 32px; }.player-actions label { font-size: 10px; }.player-actions select { margin-left: 2px; padding: 6px 4px; font-size: 10px; }
+}

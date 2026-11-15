@@ -7,12 +7,12 @@ export function StoryControls({ player }: { player: Player }) {
   const progress = useStore(s => s.progress)
   if (player.mode === 'scroll') return <div className="scroll-hint"><span>{progress > .99 ? '✳' : '↓'}</span> {progress > .99 ? 'END OF JOURNEY' : 'SCROLL TO EXPLORE'}</div>
   return <div className="player" aria-label="Guided story controls">
-    <div className="player-status"><span className="player-dot" /> {player.mode === 'playing' ? 'GUIDED STORY · PLAYING' : player.mode === 'finished' ? 'STORY COMPLETE' : 'GUIDED STORY · PAUSED'}</div>
+    <div className="player-status"><span className="player-dot" /> {player.mode === 'playing' ? 'PLAYING' : player.mode === 'finished' ? 'STORY COMPLETE' : 'PAUSED'}</div>
     <div className="player-actions">
       <button onClick={() => player.navigate(-1)} aria-label="Previous scene"><SkipBack size={16}/></button>
       {player.mode === 'playing' ? <button onClick={player.pause} aria-label="Pause"><Pause size={16}/></button> : <button onClick={player.mode === 'finished' ? player.start : player.resume} aria-label={player.mode === 'finished' ? 'Replay' : 'Resume'}><Play size={16}/></button>}
       <button onClick={() => player.navigate(1)} aria-label="Next scene"><SkipForward size={16}/></button>
-      <label>Speed <select aria-label="Playback speed" value={player.speed} onChange={e => player.setSpeed(Number(e.target.value))}><option value={0.75}>0.75×</option><option value={1}>1×</option><option value={1.5}>1.5×</option><option value={2}>2×</option></select></label>
+      <label>Speed <select aria-label="Playback speed" value={player.speed} onChange={e => player.setSpeed(Number(e.target.value))}><option value={0.75}>0.75×</option><option value={1}>1×</option><option value={1.25}>1.25×</option><option value={1.5}>1.5×</option><option value={2}>2×</option></select></label>
       <button onClick={player.exit} aria-label="Exit guided story"><X size={16}/></button>
     </div>
   </div>
@@ -27,8 +27,8 @@ export function Welcome({ onPlay, onExplore, minutes, fallback }: { onPlay: () =
       <h1>Abandoned,<br/><em>but not forgotten.</em></h1>
       <p>Journey from our galaxy to the Moon, Mars and beyond. Meet the spacecraft left behind—and discover what they taught us.</p>
       <div className="welcome-route" aria-label="Journey route"><span>GALAXY</span><b>→</b><span>MOON</span><b>→</b><span>MARS</span><b>→</b><span>DEEP SPACE</span></div>
-      <div className="welcome-actions">{!fallback && <button className="primary-action" onClick={onPlay}><Play size={15} fill="currentColor" /> Play guided demo <span>↗</span></button>}<button className={fallback ? "primary-action" : "secondary-action"} onClick={onExplore}>{fallback ? "Read the story" : "Scroll to explore"} <span>↓</span></button></div>{fallback && <p className="fallback-note">Reading mode is active because reduced motion is preferred or 3D is unavailable. The guided animation is not available in this mode.</p>}
-      <div className="welcome-meta">17 SCENES &nbsp; / &nbsp; APPROX. {minutes} MIN GUIDED &nbsp; / &nbsp; NASA SOURCES</div>
+      <div className="welcome-actions">{!fallback && <button className="primary-action" onClick={onPlay}><Play size={15} fill="currentColor" /> Play demo <span>↗</span></button>}<button className={fallback ? "primary-action" : "secondary-action"} onClick={onExplore}>{fallback ? "Read the story" : "Scroll to explore"} <span>↓</span></button></div>{fallback && <p className="fallback-note">Reading mode is active because reduced motion is preferred or 3D is unavailable. The guided animation is not available in this mode.</p>}
+      <div className="welcome-meta">SELF-PLAYING TOUR &nbsp; / &nbsp; APPROX. {minutes} MIN &nbsp; / &nbsp; ADJUSTABLE SPEED</div>
     </main>
     <div className="welcome-bottom"><span>NASA SPACE APPS CHALLENGE</span><span>GALAXY ART: AI-GENERATED ILLUSTRATION</span></div>
   </div>

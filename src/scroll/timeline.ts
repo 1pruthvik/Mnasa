@@ -1,8 +1,8 @@
 export interface GuidedStep { progress: number; duration: number; sceneId: string }
 export const TRANSITION_MS = 1200
-export const GUIDED_DEMO_MS = 120_000
+export const GUIDED_DEMO_MS = 420_000
 
-/** Preserve the relative pacing of every paragraph and transition in a two-minute demo. */
+/** Preserve the relative pacing of every paragraph and transition in a seven-minute demo at normal speed. */
 export function guidedTimeScale(steps: readonly GuidedStep[]) {
   return steps.reduce((total, step) => total + step.duration + TRANSITION_MS, 0) / GUIDED_DEMO_MS
 }

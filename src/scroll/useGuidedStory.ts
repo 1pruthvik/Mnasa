@@ -51,7 +51,7 @@ export function useGuidedStory(enabled: boolean) {
     if (mode !== 'playing' || !enabled) return
     let raf = 0
     const tick = (now: number) => {
-      const delta = last.current === null ? 0 : Math.min(now - last.current, 100) * speed * timeScale
+      const delta = last.current === null ? 0 : Math.max(now - last.current, 0) * speed * timeScale
       last.current = now
       const frame = advanceGuidedFrame(steps, cursor.current, elapsed.current, delta)
       cursor.current = frame.index
@@ -69,9 +69,14 @@ export function useGuidedStory(enabled: boolean) {
   }, [enabled, mode, setPosition, speed, steps, timeScale])
   useEffect(() => {
     if (mode !== 'playing') return
-    const takeOver = () => setMode('paused')
+    const takeOver = (event?: Event) => {
+      // Player controls (especially the speed selector on touch devices) must not
+      // be mistaken for a user's attempt to take over scrolling.
+      if (event?.type === 'touchstart' && event.target instanceof Element && event.target.closest('.player')) return
+      setMode('paused')
+    }
     const key = (event: KeyboardEvent) => {
-      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key) && !(event.target instanceof HTMLButtonElement)) takeOver()
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key) && !(event.target instanceof Element && event.target.closest('button, select, input, textarea, a, summary'))) takeOver()
     }
     const hidden = () => { if (document.hidden) takeOver() }
     window.addEventListener('wheel', takeOver, { passive: true })

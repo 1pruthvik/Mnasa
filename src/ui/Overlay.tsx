@@ -46,6 +46,7 @@ export const Overlay: React.FC<OverlayProps> = ({ onScrollToScene, onOpenDetails
   const surfaceWorld = !worldOverview && !route && beat.sceneId.startsWith('1.') ? 'moon' : !worldOverview && !route && (beat.sceneId.startsWith('2.') || beat.sceneId.startsWith('3.')) ? 'mars' : null
   if (surfaceWorld) visualCredit = beat.sceneId === '2.2' ? 'SPACE RADAR MODEL · NASA PHOTO-TEXTURED TERRAIN' : 'PHOTO-TEXTURED TERRAIN · ILLUSTRATIVE'
   if (route) visualCredit = 'GLOBAL MAPS · TRANSIT ILLUSTRATION, NOT TO SCALE'
+  const contextDetails = context && <div className="scene-fact"><p>{context.fact}</p><div className="scene-source"><div className="scene-source-links">{surfaceWorld && <a href={surfaceWorld === 'moon' ? 'https://science.nasa.gov/biological-physical/leveraging-lunar-regolith-to-further-space-exploration/' : 'https://science.nasa.gov/photojournal/the-mystery-soil/'} target="_blank" rel="noreferrer">Terrain photo ↗</a>}<a href={context.source} target="_blank" rel="noreferrer">NASA source ↗</a></div></div></div>
   const [inventoryOpen, setInventoryOpen] = useState(false)
 
   useEffect(() => {
@@ -64,10 +65,11 @@ export const Overlay: React.FC<OverlayProps> = ({ onScrollToScene, onOpenDetails
           <h2>The full inventory</h2>
           <p>{screens[idx]}</p>
           <button className="inventory-open" onClick={() => { onOpenDetails?.(); setInventoryOpen(true) }}>Explore the archive <span>↗</span></button>
-        </article> : <SceneText key={beat.id} beat={beat} title={title} text={screens[idx] || ''} hideDetails={worldOverview || (intro && idx < 3)} onOpenDetails={onOpenDetails} />}
+          {contextDetails && <details className="scene-details" onToggle={event => { if (event.currentTarget.open) onOpenDetails?.() }}><summary>Details &amp; sources <span>+</span></summary><div className="scene-details-content">{contextDetails}</div></details>}
+        </article> : <SceneText key={beat.id} beat={beat} title={title} text={screens[idx] || ''} hideDetails={worldOverview || (intro && idx < 3)} context={contextDetails} onOpenDetails={onOpenDetails} />}
         {beat.sceneId === '6.2' && <div className="ending-actions"><button onClick={onReplay}>↺ Replay the journey</button><button onClick={() => { onOpenDetails?.(); setInventoryOpen(true) }}>Explore the archive ↗</button></div>}
         {!beat.sceneId.startsWith('6.') && (!intro || idx >= 3) && <button className="model-open" onClick={onExploreModel}>◌ &nbsp; Explore in 3D <span>↗</span></button>}
-        {context && <div className="scene-fact"><p>{context.fact}</p><div className="scene-source"><span>{visualCredit}</span><div className="scene-source-links">{surfaceWorld && <a href={surfaceWorld === 'moon' ? 'https://science.nasa.gov/biological-physical/leveraging-lunar-regolith-to-further-space-exploration/' : 'https://science.nasa.gov/photojournal/the-mystery-soil/'} target="_blank" rel="noreferrer">Terrain photo ↗</a>}<a href={context.source} target="_blank" rel="noreferrer">NASA source ↗</a></div></div></div>}
+        <div className="visual-credit">{visualCredit}</div>
       </div>
       {route && <div className="travel-label">IN TRANSIT &nbsp; / &nbsp; {route === 'earth-moon' ? 'EARTH → MOON' : 'MOON → MARS'} <span>NOT TO SCALE</span></div>}
       <div className="sr-only" aria-live="polite"><h2>{title}</h2><p>{screens[idx]}</p></div>

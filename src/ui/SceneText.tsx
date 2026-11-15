@@ -35,9 +35,10 @@ interface SceneTextProps {
   title?: string
   hideDetails?: boolean
   onOpenDetails?: () => void
+  context?: React.ReactNode
 }
 
-export const SceneText: React.FC<SceneTextProps> = ({ beat, text, title, hideDetails, onOpenDetails }) => {
+export const SceneText: React.FC<SceneTextProps> = ({ beat, text, title, hideDetails, onOpenDetails, context }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   useReveal(containerRef, [beat.id, text])
 
@@ -63,10 +64,12 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, title, hideDet
 
       {/* Verbatim NASA quote on last screen of scene if present */}
       {/* Optional context stays available throughout the scene, without crowding the story. */}
-      {!hideDetails && (quote || (beat.sceneId !== '0.1' && !beat.sceneId.startsWith('6.'))) && (
+      {(context || (!hideDetails && (quote || (beat.sceneId !== '0.1' && !beat.sceneId.startsWith('6.'))))) && (
         <details className="scene-details" onToggle={(event) => { if (event.currentTarget.open) onOpenDetails?.() }}>
-          <summary>Explore details <span>+</span></summary>
+          <summary>Details &amp; sources <span>+</span></summary>
           <div className="scene-details-content">
+          {context}
+          {!hideDetails && <>
           {quote && <QuoteBlock quote={quote} />}
           {beat.sceneId === '0.2' && <FactDrawer />}
           {beat.sceneId === '1.1' && (
@@ -133,6 +136,7 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, title, hideDet
               <KayakExplainer />
             </>
           )}
+          </>}
           </div>
         </details>
       )}
