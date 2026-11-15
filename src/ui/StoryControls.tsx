@@ -1,19 +1,16 @@
 import { Pause, Play, SkipBack, SkipForward, X } from 'lucide-react'
-import { useStore } from '../store'
 import type { useGuidedStory } from '../scroll/useGuidedStory'
 
 type Player = ReturnType<typeof useGuidedStory>
 export function StoryControls({ player }: { player: Player }) {
-  const progress = useStore(s => s.progress)
-  if (player.mode === 'scroll') return <div className="scroll-hint"><span>{progress > .99 ? '✳' : '↓'}</span> {progress > .99 ? 'END OF JOURNEY' : 'SCROLL TO EXPLORE'}</div>
   return <div className="player" aria-label="Guided story controls">
-    <div className="player-status"><span className="player-dot" /> {player.mode === 'playing' ? 'PLAYING' : player.mode === 'finished' ? 'STORY COMPLETE' : 'PAUSED'}</div>
+    <div className="player-status"><span className="player-dot" /> {player.mode === 'playing' ? 'PLAYING' : player.mode === 'finished' ? 'STORY COMPLETE' : player.mode === 'scroll' ? 'SCROLLING' : 'PAUSED'}</div>
     <div className="player-actions">
       <button onClick={() => player.navigate(-1)} aria-label="Previous scene"><SkipBack size={16}/></button>
-      {player.mode === 'playing' ? <button onClick={player.pause} aria-label="Pause"><Pause size={16}/></button> : <button onClick={player.mode === 'finished' ? player.start : player.resume} aria-label={player.mode === 'finished' ? 'Replay' : 'Resume'}><Play size={16}/></button>}
+      {player.mode === 'playing' ? <button onClick={player.pause} aria-label="Pause"><Pause size={16}/></button> : <button onClick={player.mode === 'finished' ? player.start : player.resume} aria-label={player.mode === 'finished' ? 'Replay' : player.mode === 'scroll' ? 'Play' : 'Resume'}><Play size={16}/></button>}
       <button onClick={() => player.navigate(1)} aria-label="Next scene"><SkipForward size={16}/></button>
       <label>Speed <select aria-label="Playback speed" value={player.speed} onChange={e => player.setSpeed(Number(e.target.value))}><option value={0.75}>0.75×</option><option value={1}>1×</option><option value={1.25}>1.25×</option><option value={1.5}>1.5×</option><option value={2}>2×</option></select></label>
-      <button onClick={player.exit} aria-label="Exit guided story"><X size={16}/></button>
+      {player.mode !== 'scroll' && <button onClick={player.exit} aria-label="Exit guided story"><X size={16}/></button>}
     </div>
   </div>
 }
