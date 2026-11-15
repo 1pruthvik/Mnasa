@@ -1,0 +1,57 @@
+:root {
+  /* ── palette, meaning-bearing; see the usage rules below */
+  --void: #05070d;          /* space, the present */
+  --void-2: #0a0f18;
+  --paper: #f4f7fb;         /* the archive; any moment a fact is verified */
+  --paper-2: #e8eef7;
+  --ink: #0d1420;
+  --ink-soft: #2b3444;
+  --mute: #6b7689;
+  --star: #eaf0fa;
+  --beam: #7fb3ff;          /* signals, coordinates, live data */
+  --beam-dim: #4a6a9e;
+  --amber: #a8763a;         /* a NASA quotation, or a human failure */
+  --amber-soft: #c99a5c;
+  --regolith: #9a9a96;      /* the Moon */
+  --oxide: #a8563a;         /* Mars */
+  --line: #1c2330;
+  --line-paper: #dfe3ea;
+
+  /* ── type scale, 1.25 modular, clamped for phone */
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0:  clamp(0.95rem, 0.92rem + 0.15vw, 1.06rem);
+  --step-1:  clamp(1.10rem, 1.05rem + 0.25vw, 1.28rem);
+  --step-2:  clamp(1.35rem, 1.25rem + 0.5vw, 1.72rem);
+  --step-3:  clamp(1.75rem, 1.55rem + 1.0vw, 2.35rem);
+  --step-4:  clamp(2.35rem, 1.9rem + 2.2vw, 3.6rem);
+  --step-5:  clamp(3.0rem, 2.2rem + 4.0vw, 5.4rem);
+
+  /* ── families: two roles, one voice each */
+  --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* ── spacing, 4px base */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 128px;
+
+  /* ── motion */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --dur-fast: 180ms;
+  --dur: 420ms;
+  --dur-slow: 900ms;
+
+  /* ── layout */
+  --rail-h: 64px;
+  --measure: 66ch;
+  --gutter: clamp(20px, 4vw, 72px);
+}
