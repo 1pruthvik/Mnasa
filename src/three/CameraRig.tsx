@@ -52,12 +52,17 @@ export default function CameraRig() {
       position.set(...shot.pos)
       target.set(...shot.target)
     }
-    const { yaw, pitch } = state.sceneOrbit
-    if (yaw !== 0 || pitch !== 0) {
+    const { yaw, pitch, zoom } = state.sceneOrbit
+    if (yaw !== 0 || pitch !== 0 || zoom !== 1) {
       // Orbit the camera, not the terrain or the spacecraft's physical placement.
       spherical.setFromVector3(offset.copy(position).sub(target))
       spherical.theta -= yaw
-      spherical.phi = THREE.MathUtils.clamp(spherical.phi + pitch, .15, Math.PI / 2 - .02)
+      spherical.radius *= zoom
+      // On surface shots keep the camera above the ground; in space allow a
+      // complete view from above or below the subject.
+      const surface = !route && !isWorldOverview(state.progress) && /^(1|2|3)\./.test(state.activeSceneId)
+      const maxPhi = surface ? Math.acos(THREE.MathUtils.clamp((.35 - target.y) / spherical.radius, -1, 1)) : Math.PI - .05
+      spherical.phi = THREE.MathUtils.clamp(spherical.phi + pitch, .05, Math.max(.05, maxPhi))
       position.copy(offset.setFromSpherical(spherical).add(target))
     }
     camera.position.copy(position)

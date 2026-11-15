@@ -12,7 +12,8 @@ import { StoryMenu } from './ui/StoryMenu'
 import { StoryVista } from './ui/StoryVista'
 import { SceneOrbit } from './ui/SceneOrbit'
 import { ModelExplorer, itemForScene, type ExplorerItem } from './ui/ModelExplorer'
-import { isWorldOverview } from './data/experience'
+import { isWorldOverview, screenIndex } from './data/experience'
+import { travelAt } from './three/chapters/Travel'
 import { SCENES } from './data/scenes'
 import { useStore } from './store'
 import { useBootCapability } from './useBootCapability'
@@ -29,14 +30,14 @@ export default function App() {
   const [welcome, setWelcome] = useState(true)
   const activeScene = useStore(s => s.activeSceneId)
   const resetSceneOrbit = useStore(s => s.resetSceneOrbit)
-  const [sceneInspect, setSceneInspect] = useState(false)
+  const shotKind = useStore(s => travelAt(s.progress) || (isWorldOverview(s.progress) ? 'overview' : s.activeSceneId === '0.1' && screenIndex(s.progress) < 2 ? 'galaxy' : 'scene'))
   const [explorerItem, setExplorerItem] = useState<ExplorerItem | null>(null)
   const closeExplorer = useCallback(() => setExplorerItem(null), [])
   const [creditsOpen, setCreditsOpen] = useState(false)
   const [mapModalOpen, setMapModalOpen] = useState<'lunar' | 'mars' | null>(null)
   useBootCapability()
   // A new shot gets its original composition rather than inheriting another scene's orbit.
-  useEffect(() => { setSceneInspect(false); resetSceneOrbit() }, [activeScene, resetSceneOrbit])
+  useEffect(() => { resetSceneOrbit() }, [activeScene, shotKind, resetSceneOrbit])
   useEffect(() => {
     if (!mapModalOpen) return
     const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setMapModalOpen(null) }
@@ -44,7 +45,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [mapModalOpen])
   const isFallback = readingMode || reducedMotion || tier === 'none' || !webglOk
-  useEffect(() => { if (welcome || isFallback) { setSceneInspect(false); resetSceneOrbit() } }, [welcome, isFallback, resetSceneOrbit])
+  useEffect(() => { if (welcome || isFallback) resetSceneOrbit() }, [welcome, isFallback, resetSceneOrbit])
   useLenis(!isFallback)
   const player = useGuidedStory(!isFallback && !welcome)
   const handleScrollToBeat = (t: number) => {
@@ -59,16 +60,16 @@ export default function App() {
     if (beat) handleScrollToBeat(beat.t0)
   }
   const explore = () => { setWelcome(false); player.exit() }
-  const play = () => { setSceneInspect(false); resetSceneOrbit(); setWelcome(false); if (!isFallback) player.start() }
+  const play = () => { resetSceneOrbit(); setWelcome(false); if (!isFallback) player.start() }
   const pauseForDetails = () => { if (player.mode === 'playing') player.pause() }
 
   return <div className="relative min-h-screen bg-[#05070d] text-slate-100 overflow-x-hidden">
     {isFallback ? <><FallbackStory />{!reducedMotion && tier !== 'none' && webglOk && <ReadingModeToggle />}</> : <>
       <CanvasRoot />
       {!welcome && <>
-        <div className="story-top"><button onClick={() => { setSceneInspect(false); resetSceneOrbit(); player.exit(); setWelcome(true) }} className="story-brand">✳ <span>THE QUIET EXPLORERS</span></button><StoryMenu onPlay={play} onHome={() => { player.exit(); setWelcome(true) }} onOpen={pauseForDetails} onMap={() => setMapModalOpen('lunar')} onCredits={() => setCreditsOpen(true)} /></div>
+        <div className="story-top"><button onClick={() => { resetSceneOrbit(); player.exit(); setWelcome(true) }} className="story-brand">✳ <span>THE QUIET EXPLORERS</span></button><StoryMenu onPlay={play} onHome={() => { player.exit(); setWelcome(true) }} onOpen={pauseForDetails} onMap={() => setMapModalOpen('lunar')} onCredits={() => setCreditsOpen(true)} /></div>
         <StoryVista />
-        {sceneInspect && <SceneOrbit onClose={() => { setSceneInspect(false); resetSceneOrbit(); document.querySelector<HTMLButtonElement>('.model-open')?.focus() }} />}
+        {shotKind !== 'galaxy' && <SceneOrbit />}
         <Overlay onScrollToScene={handleScrollToScene} onOpenDetails={pauseForDetails} onReplay={play} onExploreModel={() => { pauseForDetails(); const p = useStore.getState().progress; setExplorerItem(itemForScene(useStore.getState().activeSceneId, isWorldOverview(p))) }} />
         <StoryControls player={player} />
         <ProgressRail onScrollTo={handleScrollToBeat} />
@@ -76,7 +77,7 @@ export default function App() {
       <div className="w-full pointer-events-none" style={{ height: '3800vh' }} aria-hidden="true" />
     </>}
     {welcome && <Welcome onPlay={play} onExplore={explore} minutes={player.totalMinutes} fallback={isFallback} />}
-    {explorerItem && <ModelExplorer initial={explorerItem} onClose={closeExplorer} onRotateScene={() => { setExplorerItem(null); resetSceneOrbit(); setSceneInspect(true) }} />}
+    {explorerItem && <ModelExplorer initial={explorerItem} onClose={closeExplorer} onRotateScene={() => { setExplorerItem(null); requestAnimationFrame(() => document.querySelector<HTMLButtonElement>('.scene-orbit-controls button')?.focus()) }} />}
     <Credits isOpen={creditsOpen} onClose={() => setCreditsOpen(false)} />
     {mapModalOpen && <div role="dialog" aria-modal="true" aria-label="Atlas maps" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"><div className="flex flex-col items-center gap-3"><div className="flex gap-2">
       <button onClick={() => setMapModalOpen('lunar')} className="px-3 py-1 rounded text-xs font-mono bg-slate-800">Moon (Near Side)</button>

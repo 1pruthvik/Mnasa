@@ -143,9 +143,13 @@ html, body { font-family: 'Inter Variable', Inter, system-ui, sans-serif; }
   .story-card article { gap: 10px; }.visual-credit { margin-top: 13px; font-size: 9px; }.scene-fact p { font-size: 12px; }
   .player { left: auto; right: 10px; bottom: 58px; gap: 6px; padding: 5px 7px; }.player-status { font-size: 9px; }.player-actions { gap: 2px; }.player-actions button { min-width: 30px; min-height: 32px; }.player-actions label { font-size: 10px; }.player-actions select { margin-left: 2px; padding: 6px 4px; font-size: 10px; }
 }
-/* Only shown on request; normal scrolling and controls remain untouched. */
+/* Direct 3D interaction over the story canvas; touch scrolling stays native. */
 .explorer-in-scene { margin: 0 0 18px; padding: 10px 12px; border: 1px solid #b89a84; color: #f0dfd0; font-size: 12px; cursor: pointer; }.explorer-in-scene:hover { background: #e1c4ac; color: #10141a; }
-.scene-orbit-surface { position: fixed; inset: 0; z-index: 4; cursor: grab; touch-action: none; }.scene-orbit-surface:active { cursor: grabbing; }
+.scene-orbit-surface { position: fixed; inset: 0; z-index: 4; cursor: grab; touch-action: pan-y; }.scene-orbit-surface:active { cursor: grabbing; }
 .scene-orbit-controls { position: fixed; z-index: 45; top: 75px; right: clamp(16px,4vw,56px); display: flex; align-items: center; gap: 5px; padding: 7px; background: #0a101beF; border: 1px solid #ffffff35; color: #ebeeef; font-size: 11px; }
 .scene-orbit-controls span { padding: 0 7px; color: #d4c3b3; }.scene-orbit-controls button { min-width: 32px; height: 32px; padding: 0 7px; border: 1px solid #ffffff30; cursor: pointer; }.scene-orbit-controls button:hover { background: #e1c4ac; color: #10141a; }
 @media(max-width:767px) { .scene-orbit-controls { top: 54px; right: 10px; gap: 3px; padding: 5px; font-size: 10px; }.scene-orbit-controls span { padding: 0 3px; }.scene-orbit-controls button { min-width: 28px; height: 30px; padding: 0 5px; } }
+
+.orbit-touch-hint { display: none; }
+@media (pointer: coarse) { .orbit-desktop-hint { display: none; }.orbit-touch-hint { display: inline; } }
+@media (max-width: 430px) { .scene-orbit-controls { gap: 2px; }.scene-orbit-controls span { font-size: 9px; }.scene-orbit-controls button { min-width: 25px; padding: 0 4px; } }

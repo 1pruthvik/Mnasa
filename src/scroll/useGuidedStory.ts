@@ -69,23 +69,44 @@ export function useGuidedStory(enabled: boolean) {
   }, [enabled, mode, setPosition, speed, steps, timeScale])
   useEffect(() => {
     if (mode !== 'playing') return
+    let sceneTouch: { x: number; y: number } | null = null
     const takeOver = (event?: Event) => {
       // Player controls (especially the speed selector on touch devices) must not
       // be mistaken for a user's attempt to take over scrolling.
-      if (event?.type === 'touchstart' && event.target instanceof Element && event.target.closest('.player, .scene-orbit-surface, .scene-orbit-controls')) return
+      if (event?.type === 'touchstart' && event.target instanceof Element && event.target.closest('.player, .scene-orbit-controls')) return
+      if (event?.type === 'touchstart' && event.target instanceof Element && event.target.closest('.scene-orbit-surface')) {
+        const touch = (event as TouchEvent).touches[0]
+        sceneTouch = touch ? { x: touch.clientX, y: touch.clientY } : null
+        return
+      }
       setMode('paused')
     }
+    const touchMove = (event: TouchEvent) => {
+      if (!sceneTouch || !event.touches[0]) return
+      const dx = event.touches[0].clientX - sceneTouch.x
+      const dy = event.touches[0].clientY - sceneTouch.y
+      if (Math.hypot(dx, dy) < 8) return
+      sceneTouch = null
+      if (Math.abs(dy) > Math.abs(dx)) takeOver()
+    }
+    const touchEnd = () => { sceneTouch = null }
     const key = (event: KeyboardEvent) => {
       if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key) && !(event.target instanceof Element && event.target.closest('button, select, input, textarea, a, summary'))) takeOver()
     }
     const hidden = () => { if (document.hidden) takeOver() }
     window.addEventListener('wheel', takeOver, { passive: true })
     window.addEventListener('touchstart', takeOver, { passive: true })
+    window.addEventListener('touchmove', touchMove, { passive: true })
+    window.addEventListener('touchend', touchEnd, { passive: true })
+    window.addEventListener('touchcancel', touchEnd, { passive: true })
     window.addEventListener('keydown', key)
     document.addEventListener('visibilitychange', hidden)
     return () => {
       window.removeEventListener('wheel', takeOver)
       window.removeEventListener('touchstart', takeOver)
+      window.removeEventListener('touchmove', touchMove)
+      window.removeEventListener('touchend', touchEnd)
+      window.removeEventListener('touchcancel', touchEnd)
       window.removeEventListener('keydown', key)
       document.removeEventListener('visibilitychange', hidden)
     }
