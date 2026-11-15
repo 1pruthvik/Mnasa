@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BEATS } from '../contracts/beats'
 import { SCENES } from '../data/scenes'
-import { advanceGuidedFrame, TRANSITION_MS, type GuidedStep } from './timeline'
+import { advanceGuidedFrame, GUIDED_DEMO_MS, guidedTimeScale, type GuidedStep } from './timeline'
 
 export function useGuidedStory(enabled: boolean) {
   const steps = useMemo<GuidedStep[]>(() => BEATS.flatMap((beat) => {
@@ -13,12 +13,15 @@ export function useGuidedStory(enabled: boolean) {
       sceneId: beat.sceneId,
     }))
   }), [])
+  const timeScale = useMemo(() => guidedTimeScale(steps), [steps])
+  const lastPosition = useRef<number | null>(null)
   const [mode, setMode] = useState<'scroll' | 'playing' | 'paused' | 'finished'>('scroll')
   const [speed, setSpeed] = useState(1)
   const cursor = useRef(0)
   const elapsed = useRef(0)
   const last = useRef<number | null>(null)
   const setPosition = useCallback((p: number) => {
+    lastPosition.current = p
     const max = document.documentElement.scrollHeight - window.innerHeight
     window.scrollTo({ top: Math.max(0, max) * p, behavior: 'instant' })
     setStorePosition(p)
@@ -48,7 +51,7 @@ export function useGuidedStory(enabled: boolean) {
     if (mode !== 'playing' || !enabled) return
     let raf = 0
     const tick = (now: number) => {
-      const delta = last.current === null ? 0 : Math.min(now - last.current, 100) * speed
+      const delta = last.current === null ? 0 : Math.min(now - last.current, 100) * speed * timeScale
       last.current = now
       const frame = advanceGuidedFrame(steps, cursor.current, elapsed.current, delta)
       cursor.current = frame.index
@@ -63,7 +66,7 @@ export function useGuidedStory(enabled: boolean) {
     }
     raf = requestAnimationFrame(tick)
     return () => { cancelAnimationFrame(raf); last.current = null }
-  }, [enabled, mode, setPosition, speed, steps])
+  }, [enabled, mode, setPosition, speed, steps, timeScale])
   useEffect(() => {
     if (mode !== 'playing') return
     const takeOver = () => setMode('paused')
@@ -87,10 +90,13 @@ export function useGuidedStory(enabled: boolean) {
     const p = getCurrentProgress()
     let index = 0
     for (let i = 1; i < steps.length; i++) if (Math.abs(steps[i].progress - p) < Math.abs(steps[index].progress - p)) index = i
-    if (index !== cursor.current) { cursor.current = index; elapsed.current = 0 }
+    // If paused mid-transition, continue from the exact moment unless the user scrolled elsewhere.
+    const scrollRange = document.documentElement.scrollHeight - window.innerHeight
+    const scrollTolerance = scrollRange > 0 ? 2 / scrollRange : 0.00001
+    if (lastPosition.current === null || Math.abs(p - lastPosition.current) > scrollTolerance) { cursor.current = index; elapsed.current = 0 }
     setMode('playing')
   }
-  return { mode, speed, setSpeed, start, resume, pause: () => setMode('paused'), exit: () => setMode('scroll'), navigate, totalMinutes: Math.ceil(steps.reduce((n, s) => n + s.duration + TRANSITION_MS, 0) / 60000) }
+  return { mode, speed, setSpeed, start, resume, pause: () => setMode('paused'), exit: () => setMode('scroll'), navigate, totalMinutes: GUIDED_DEMO_MS / 60000 }
 }
 
 // Store access outside React renders, also keeps the very first programmatic frame in sync.
