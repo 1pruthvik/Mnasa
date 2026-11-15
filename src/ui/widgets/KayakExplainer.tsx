@@ -47,3 +47,4 @@ export const KayakExplainer: React.FC = () => {
 };
 
 export default KayakExplainer;
+

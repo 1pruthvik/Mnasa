@@ -36,3 +36,4 @@ export const FootpadScale: React.FC = () => {
     </div>
   )
 }
+

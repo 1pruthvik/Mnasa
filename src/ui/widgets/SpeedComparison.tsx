@@ -59,3 +59,4 @@ export const SpeedComparison: React.FC = () => {
 };
 
 export default SpeedComparison;
+
