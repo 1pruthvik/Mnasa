@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "check-data": "node --experimental-strip-types scripts/check-data.ts",
     "check-copy": "node --experimental-strip-types scripts/check-copy.ts",
-    "check-story": "node --experimental-strip-types scripts/check-story.ts"
+    "check-story": "node --experimental-strip-types scripts/check-story.ts",
+    "check-playback": "node --experimental-strip-types scripts/check-playback.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

@@ -1,4 +1,5 @@
 import { useStore } from '../../store'
+import { screenIndex } from '../../data/experience'
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -6,6 +7,8 @@ import { StarField } from '../env/StarField'
 
 export function Chapter00Descent() {
   const scene = useStore(s => s.activeSceneId)
+  const progress = useStore(s => s.progress)
+  const showSolarSystem = scene === '0.2' || screenIndex(progress) >= 3
   const sunRef = useRef<THREE.Mesh>(null!)
   const coronaRef = useRef<THREE.Mesh>(null!)
 
@@ -19,6 +22,7 @@ export function Chapter00Descent() {
       {/* Rich Multi-Layer Cosmic Starfield */}
       <StarField density="dense" />
 
+      <group visible={showSolarSystem}>
       {/* The Sun at [0, 0, 0] */}
       <group position={[0, 0, 0]}>
         {/* Core luminous stellar body */}
@@ -110,8 +114,7 @@ export function Chapter00Descent() {
         <meshStandardMaterial color="#ea580c" roughness={0.8} />
       </mesh>
 
-      {/* The Door Transition */}
-
+      </group>
     </group>
   )
 }

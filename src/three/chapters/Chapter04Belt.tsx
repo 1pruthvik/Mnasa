@@ -1,4 +1,5 @@
 import { useStore } from '../../store'
+import { NasaModel } from '../objects/NasaModel'
 import { StarField } from '../env/StarField'
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
@@ -19,7 +20,7 @@ export function Chapter04Belt() {
   return (
     <group>
       {/* Harsh Single-Source Directional Sunlight (Lonely deep space lighting) */}
-      <ambientLight intensity={0.04} color="#64748b" />
+      <ambientLight intensity={0.65} color="#64748b" />
       <directionalLight position={[-60, 40, 50]} intensity={4.2} color="#ffffff" />
 
       {/* Instanced Asteroid Belt Ring */}
@@ -56,10 +57,10 @@ export function Chapter04Belt() {
       </group>
 
       {/* Dawn Spacecraft in Ceres Orbit */}
-      {scene === '4.1' && <Dawn />}
+      {scene === '4.1' && <NasaModel url="/models/dawn.glb" position={[-25, 8, -15]} size={14} ground={false} fallback={<Dawn />} />}
 
       {/* NEAR Shoemaker landed on Eros */}
-      {scene === '4.2' && <NEARShoemaker />}
+      {scene === '4.2' && <NasaModel url="/models/near-shoemaker.glb" position={[-40, -1.9, -7]} size={4} ground={false} fallback={<NEARShoemaker />} />}
     </group>
   )
 }

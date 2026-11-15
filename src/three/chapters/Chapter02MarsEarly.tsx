@@ -1,10 +1,15 @@
 import { useStore } from '../../store'
+import { isWorldOverview } from '../../data/experience'
+import { MarsGlobe } from '../env/MarsGlobe'
+import { NasaModel } from '../objects/NasaModel'
 import { MarsTerrain } from '../env/MarsTerrain'
 import { VikingLander } from '../objects/VikingLander'
 import { PathfinderLander } from '../objects/PathfinderLander'
 
 export function Chapter02MarsEarly() {
   const scene = useStore((s) => s.activeSceneId)
+  const overview = useStore((s) => isWorldOverview(s.progress))
+  if (overview) return <MarsGlobe />
   return (
     <group>
       {/* Warm Diffuse Martian Sunlight & Atmosphere Fill */}
@@ -27,7 +32,7 @@ export function Chapter02MarsEarly() {
 
 
       {/* Viking 1 Lander at Chryse Planitia */}
-      {scene === '2.1' && <VikingLander />}
+      {scene === '2.1' && <NasaModel url="/models/viking-lander.glb" position={[0, -0.2, 0]} size={5.5} fallback={<VikingLander />} />}
 
       {/* Pathfinder Lander & Sojourner Rover at Ares Vallis */}
       {scene === '2.2' && <PathfinderLander />}

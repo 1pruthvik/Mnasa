@@ -12,7 +12,7 @@ function Model({ url, position, size, ground = true }: ModelProps) {
   const gltf = useGLTF(url, '/draco/')
   const { model, scale, origin } = useMemo(() => {
     const model = gltf.scene.clone(true)
-    model.traverse((object) => { if (object instanceof THREE.Mesh) { object.castShadow = true; object.receiveShadow = true } })
+    model.traverse((object) => { if (object instanceof THREE.Mesh) { object.castShadow = true; object.receiveShadow = false } })
     model.updateMatrixWorld(true)
     const box = new THREE.Box3().setFromObject(model)
     const extent = box.getSize(new THREE.Vector3())

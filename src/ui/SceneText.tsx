@@ -32,10 +32,12 @@ import { useReveal } from './motion/useReveal'
 interface SceneTextProps {
   beat: BeatDefinition
   text: string
+  title?: string
+  hideDetails?: boolean
   onOpenDetails?: () => void
 }
 
-export const SceneText: React.FC<SceneTextProps> = ({ beat, text, onOpenDetails }) => {
+export const SceneText: React.FC<SceneTextProps> = ({ beat, text, title, hideDetails, onOpenDetails }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   useReveal(containerRef, [beat.id, text])
 
@@ -48,7 +50,7 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, onOpenDetails 
       className="pointer-events-auto max-w-xl text-slate-100 flex flex-col gap-3 font-sans select-none"
     >
       <header data-reveal>
-        <h2 className="text-white leading-tight">{sceneDef?.title}</h2>
+        <h2 className="text-white leading-tight">{title || sceneDef?.title}</h2>
       </header>
 
       {/* Narrative Paragraph */}
@@ -61,7 +63,7 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, onOpenDetails 
 
       {/* Verbatim NASA quote on last screen of scene if present */}
       {/* Optional context stays available throughout the scene, without crowding the story. */}
-      {(quote || (beat.sceneId !== '0.1' && !beat.sceneId.startsWith('6.'))) && (
+      {!hideDetails && (quote || (beat.sceneId !== '0.1' && !beat.sceneId.startsWith('6.'))) && (
         <details className="scene-details" onToggle={(event) => { if (event.currentTarget.open) onOpenDetails?.() }}>
           <summary>Explore details <span>+</span></summary>
           <div className="scene-details-content">

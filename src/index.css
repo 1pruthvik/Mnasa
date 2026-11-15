@@ -88,3 +88,27 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid
   .chapter-rail { height: 50px; }.chapter-rail button { font-size: 9px; }
 }
 @media (max-width: 767px) { .story-card { width: calc(100% - 40px); } }
+/* Cosmic orientation and destination establishing shots */
+.welcome { background: #050a12; }
+.welcome:after { inset: 0; width: auto; height: auto; border-radius: 0; opacity: .92; box-shadow: none; background: linear-gradient(90deg,#050a12 8%,#050a12e8 32%,#050a1266 68%,#050a1233), url('/images/milky-way-illustration.png') center / cover no-repeat; }
+.welcome-stars { z-index: 1; opacity: .18; }.welcome-content { z-index: 2; }.welcome h1 { font-size: clamp(3.4rem,6.1vw,6rem); }.welcome-content > p { max-width: 460px; }
+.welcome-route { display: flex; align-items: center; gap: 11px; margin-top: 22px; color: #bdc5c8; font: 9px ui-monospace,monospace; letter-spacing: .12em; }.welcome-route b { color: #d2a27f; font-size: 13px; font-weight: normal; }.welcome-actions { margin-top: 28px; }
+.vista { position: fixed; inset: 0; z-index: 1; pointer-events: none; background-color: #030712; }
+.vista-galaxy { background: linear-gradient(90deg,#030712 0%,#030712bd 33%,transparent 75%), url('/images/milky-way-illustration.png') 65% center / cover no-repeat; transition: background-size 2s ease; }
+.vista-galaxy-closer { background-size: auto, 150% auto; }
+.vista-moon { background: #000 url('/images/moon.jpg') 78% center / min(78vh, 58vw) auto no-repeat; }
+.vista-earth { background: #000 url('/images/earth-b.jpg') 76% center / min(140vh, 105vw) auto no-repeat; }
+.transition-veil { position: fixed; inset: 0; z-index: 3; background: #040810; pointer-events: none; }
+@media(max-width:767px) { .welcome:after { inset: 0; width: auto; height: auto; background-position: 62% center; opacity: .65; }.welcome-content { padding: 85px 0 110px; }.welcome h1 { font-size: clamp(3.2rem,11vw,4.7rem); }.welcome-route { gap: 7px; font-size: 8px; }.vista-galaxy { background-position: 68% 25%; }.vista-galaxy-closer { background-size: auto, 220% auto; }.vista-moon { background-position: center 20%; background-size: 88vw auto; }.vista-earth { background-position: center 18%; background-size: 160vw auto; } }
+/* Interactive atlas: explicit inspect mode keeps scroll and touch navigation independent. */
+.model-open, .ending-actions button { margin-top: 14px; padding: 10px 13px; border: 1px solid #9b8b7c; color: #f0dfd0; font-size: 11px; letter-spacing: .03em; cursor: pointer; }
+.model-open span { margin-left: 18px; }.model-open:hover, .ending-actions button:hover { background: #e1c4ac; color: #10141a; }
+.ending-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+.explorer-backdrop { position: fixed; inset: 0; z-index: 90; background: #02050df2; display: flex; align-items: center; justify-content: center; padding: 22px; }
+.explorer-window { width: min(1050px, 100%); max-height: 95vh; overflow: auto; overscroll-behavior: contain; background: #0a101a; border: 1px solid #46505a; box-shadow: 0 30px 100px #000; }
+.explorer-header { padding: 20px 25px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #303944; }.explorer-header span,.explorer-info label { color: #b7a18e; letter-spacing: .13em; font: 10px ui-monospace,monospace; }.explorer-header h2 { font: 28px Georgia,serif; margin-top: 6px; }.explorer-header button { border: 1px solid #59616a; width: 38px; height: 38px; cursor: pointer; }
+.explorer-content { display: grid; grid-template-columns: 1.5fr 1fr; }.explorer-stage { position: relative; min-height: 460px; background: radial-gradient(circle at center,#192332,#050911 70%); touch-action: none; cursor: grab; }.explorer-stage:active { cursor: grabbing; }.explorer-stage canvas { position: absolute !important; inset: 0; }.explorer-drag { position: absolute; bottom: 18px; left: 20px; pointer-events: none; font: 9px ui-monospace,monospace; letter-spacing: .12em; color: #a7afb6; }
+.explorer-info { padding: 34px 28px; }.explorer-info select { display: block; width: 100%; margin: 12px 0 34px; padding: 11px; background: #17212c; border: 1px solid #53606b; color: white; }.explorer-info h3 { font: 30px Georgia,serif; }.explorer-info p { color: #bfc8ce; font-size: 13px; line-height: 1.7; margin: 14px 0; }.explorer-info a { color: #e3b899; font-size: 12px; text-decoration: underline; }.explorer-rotate { display: flex; gap: 7px; margin-top: 35px; }.explorer-rotate button { border: 1px solid #697782; min-width: 38px; height: 38px; padding: 0 9px; cursor: pointer; }.explorer-rotate button:hover { background: #dfc3ac; color: #111; }.explorer-info .explorer-caption { font-size: 11px; color: #919da5; }
+@media(max-width:767px) { .explorer-backdrop { padding: 10px; }.explorer-content { grid-template-columns: 1fr; }.explorer-header { padding: 13px 17px; }.explorer-header h2 { font-size: 23px; }.explorer-stage { min-height: 38vh; }.explorer-info { padding: 17px; }.explorer-info select { margin: 8px 0 16px; }.explorer-info h3 { font-size: 24px; }.explorer-rotate { margin-top: 15px; }.model-open, .ending-actions button { margin-top: 8px; padding: 8px 10px; } }
+.travel-label { position: fixed; z-index: 5; right: 5%; top: 100px; color: #d8c4b3; font: 9px ui-monospace,monospace; letter-spacing: .15em; }.travel-label span { display: block; color: #8898a5; margin-top: 8px; text-align: right; }
+@media(max-width:767px) { .travel-label { right: 15px; top: 65px; font-size: 8px; } }

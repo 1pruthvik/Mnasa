@@ -88,8 +88,10 @@ export const SCENES: Record<string, SceneDefinition> = {
     title: 'Somewhere in the Milky Way',
     kicker: 'Movement 00 · The Descent',
     copy: [
+      'Across the universe, galaxies gather stars, gas and dust together through gravity. Our journey begins with one of them.',
+      'Our home galaxy is the Milky Way, a spiral galaxy. We see it from within, so this outside view is an artist’s impression.',
       'A few hundred billion stars. One of them is ours.',
-      'Around it, eight planets. Around one of those planets, one moon. And on that moon, and on the fourth planet out, there are machines that stopped working decades ago and have not moved since.',
+      'Around it, eight planets. Around one of those planets, one moon. And on that moon, and on the fourth planet out, there are machines that fell silent at different times, some decades ago and others much more recently.',
       'This is not a story about garbage. It is a story about a filing system — the most patient filing system humans have ever built — and about fifteen pieces of hardware that are still filed, still numbered, recorded in the archive of exploration.',
     ],
     quoteId: 'q.0.1',
@@ -109,9 +111,10 @@ export const SCENES: Record<string, SceneDefinition> = {
   },
   '1.1': {
     id: '1.1',
-    title: 'Eagle',
+    title: 'Apollo 11: Eagle',
     kicker: 'Movement 01 · The Moon',
     copy: [
+      'Our first destination is the Moon: a rocky world with a thin exosphere, ancient craters and enormous changes between lunar day and night.',
       '20 July 1969, 20:17:40 UT. A machine the shape of a spider sets itself down on a flat gray plain at 0.67416 degrees north, 23.47314 degrees east. The coordinates were not known to that precision at the time. They were measured later, from orbit, by the Lunar Reconnaissance Orbiter.',
       "Nineteen minutes after Neil Armstrong stepped out, Edwin Aldrin followed him and called the surface what it looks like: 'Magnificent desolation.'",
       'Then the two men did something that is easy to miss in the drama of the moment. They took the spacecraft apart by leaving half of it behind.',
@@ -125,7 +128,7 @@ export const SCENES: Record<string, SceneDefinition> = {
   },
   '1.2': {
     id: '1.2',
-    title: 'Intrepid, and the machine it came to visit',
+    title: 'Apollo 12 and Surveyor 3',
     kicker: 'Movement 01 · The Moon',
     copy: [
       'Three months after Tranquility Base, a second crew came down in the Oceanus Procellarum with a specific address in mind. They landed at 3.0128 degrees south, 23.4219 degrees west — within about 180 metres of a machine that had been dead for two and a half years.',
@@ -142,7 +145,7 @@ export const SCENES: Record<string, SceneDefinition> = {
   },
   '1.3': {
     id: '1.3',
-    title: 'Falcon, and the car we parked',
+    title: 'Apollo 15 and its lunar rover',
     kicker: 'Movement 01 · The Moon',
     copy: [
       'July 1971. The fourth crewed landing, at 26.13239 degrees north, 3.63330 degrees east, in the Mare Imbrium at the foot of the Apennine mountains. And for the first time, they brought a car.',
@@ -163,13 +166,13 @@ export const SCENES: Record<string, SceneDefinition> = {
   },
   '1.4': {
     id: '1.4',
-    title: 'The six stations, and the year the listening stopped',
+    title: 'ALSEP: the Moon’s science stations',
     kicker: 'Movement 01 · The Moon',
     copy: [
       "Put the pins on the map and a pattern appears. Apollo 11's package was a prototype: solar panels, two experiments, and it survived only into a second lunar day before it stopped accepting commands.",
       "Apollo 12's was the first full ALSEP: a nuclear-powered central station with six experiments, turned on in November 1969. Apollo 15's added a magnetometer and a heat flow experiment and ran seven.",
       'Between them, these packages were a network. Seismometers listening to a body that is not quite dead. A magnetometer reading a field almost too faint to call a field. Ion gauges sniffing an atmosphere that is closer to a vacuum with a memory.',
-      'And then one date ends all of it at once. 30 September 1977. The stations did not fail that day. They were switched off, together, from Earth.',
+      'On 30 September 1977, the remaining active ALSEP stations were switched off from Earth. Apollo 11’s earlier EASEP had stopped accepting commands in 1969.',
       'Except for the mirrors.',
     ],
     quoteId: 'q.1.4',
@@ -177,9 +180,10 @@ export const SCENES: Record<string, SceneDefinition> = {
   },
   '2.1': {
     id: '2.1',
-    title: 'The lander that was renamed for a man who died',
+    title: 'Viking 1: a laboratory on Mars',
     kicker: 'Movement 02 · Mars Early',
     copy: [
+      'Next is Mars, a dusty, rocky planet with a thin atmosphere made mostly of carbon dioxide. Its landscapes preserve clues to a wetter past.',
       '20 July 1976. Seven years to the day after Tranquility Base, a different kind of spacecraft came down on a different world. Viking 1 had launched on 20 August 1975 on a Titan IIIE-Centaur, massed 3,527 kilograms in two parts — a 2,339-kilogram orbiter and a 978-kilogram lander — and had made three course corrections on the way out.',
       'It entered orbit on 19 June 1976. And then the mission nearly had to change its address. When the orbiter began transmitting photographs of the primary landing site in the Chryse region, scientists discovered the area was rougher than expected. Using those new pictures, they retargeted the lander to the western slopes of Chryse Planitia.',
       'The lander separated at 08:32 UT on 20 July 1976 and, after a complicated entry during which it took air samples, set down at 11:53:06 UT at 22.483 degrees north, 47.94 degrees west — about 28 kilometres from its planned target. It began taking high-quality photographs in three colours. It recorded temperatures from minus 86 °C before dawn to minus 33 °C in the afternoon.',
@@ -187,14 +191,14 @@ export const SCENES: Record<string, SceneDefinition> = {
       'Then Viking 1 did the thing that makes it belong in this story. It did not stop. Its primary mission ended in November 1976. It continued through an extended mission to May 1978, a continuation mission to July 1979, and a survey mission after that. The lander kept returning daily — and eventually weekly — weather reports under something called the Viking Monitor Mission.',
       'In January 1982 it was renamed the Thomas Mutch Memorial Station, for Thomas A. Mutch (1931–1980), the leader of the Viking imaging team, who had died on 6 October 1980.',
       'It operated until 11 November 1982, when a faulty command sent from Earth interrupted communications. Further attempts to regain contact were unsuccessful.',
-      'Read that again. The machine did not die of dust, or cold, or distance. It was switched off by a mistake in a command from home.',
+      'Read that again. A mistaken command interrupted contact; controllers were unable to restore communication.',
     ],
     quoteId: 'q.2.1',
     widgets: [{ id: 'weather-log', sceneId: '2.1', placement: 'right', title: 'Viking Weather Telemetry Log' }],
   },
   '2.2': {
     id: '2.2',
-    title: 'Sojourner: the first wheels, and the beach ball',
+    title: 'Pathfinder and Sojourner: first wheels on Mars',
     kicker: 'Movement 02 · Mars Early',
     copy: [
       '4 July 1997. No retro-rockets, no landing legs, no careful hover. Mars Pathfinder hit the atmosphere directly, slowed under a parachute, and then inflated the largest airbag system anyone had ever flown: four large bags, each containing six smaller interconnected spheres, standing 5 metres tall and 5 metres across, inflated about 100 metres above the ground by an onboard altimeter.',
@@ -231,7 +235,7 @@ export const SCENES: Record<string, SceneDefinition> = {
       'While other missions explored the surface, InSight listened for clues about what lies beneath it.',
       'It landed on 26 November 2018 at 11:52:59 a.m. PT, near the equator on the western side of a flat, smooth plain called Elysium Planitia — 4.5 degrees north, 135.9 degrees east, just 600 kilometres from Curiosity’s landing site in Gale Crater. The site was chosen not for its surface features but for safety, because InSight’s purpose was to study the interior, not the ground.',
       'Planitia is Latin for a flat surface or plain. Elysium comes from the ancient Greek name for an afterlife paradise.',
-      'Its two goals were to understand how rocky planets formed and evolved, and to find out how tectonically active Mars is today and how often meteorites hit it. To do it, the lander’s arm — over 1.8 metres long — lifted a seismometer and a heat flow probe off the deck and placed them on the ground, and then the spacecraft listened. It determined the size of the core, what it is made of and whether it is liquid or solid; the thickness and structure of the crust; the structure of the mantle; how warm the interior is and how much heat is still flowing out of it.',
+      'Its two goals were to understand how rocky planets formed and evolved, and to find out how tectonically active Mars is today and how often meteorites hit it. To do it, the lander’s arm — over 1.8 metres long — lifted a seismometer and a heat flow probe off the deck and placed them on the ground, and then the spacecraft listened. It determined the size of the core, what it is made of and whether it is liquid or solid; the thickness and structure of the crust; the structure of the mantle; and details of the interior. The heat-flow probe did not reach its intended depth, so its heat-flow measurement could not be completed.',
       'It was the first mission to give Mars a thorough checkup since the planet formed 4.5 billion years ago. Four years on the Red Planet. Vital signs: pulse, temperature, reflexes.',
       'The mission ended on 15 December 2022. And here is the detail that earns InSight its place in this story: the object did not disappear from the record when it stopped working. A NASA Mars orbiter later spotted the retired lander specifically to study dust movement — the retired machine becoming an instrument one last time, this time as a fixed reference point on the surface of another planet.',
     ],
@@ -259,7 +263,7 @@ export const SCENES: Record<string, SceneDefinition> = {
   },
   '4.1': {
     id: '4.1',
-    title: 'Dawn: out of fuel, in orbit, forever',
+    title: 'Dawn: out of fuel, in orbit around Ceres',
     kicker: 'Movement 04 · The Asteroid Belt',
     copy: [
       'Dawn launched on 27 September 2007 at 11:34 UTC from Cape Canaveral. Its mission was different from every other mission in this script, because it was not about arriving. It was about comparing.',
@@ -281,7 +285,7 @@ export const SCENES: Record<string, SceneDefinition> = {
       'It finally entered orbit around Eros at 15:33 UT on 14 February 2000 — roughly a year later than intended — becoming the first human-made object to orbit a minor planet. On 14 March 2000, NASA renamed it NEAR Shoemaker for the geologist Eugene M. Shoemaker (1928–1997).',
       'Then it spiralled inward with great patience. Operational orbit at about 50 kilometres from Eros’ centre by 30 April 2000. A lower orbit on 13 July 2000, bringing it about 19 kilometres from the surface. A close flyby on 26 October 2000 to about 5.3 kilometres above the surface. By the end of that year, a circular 35-kilometre orbit with passes only 5 to 6 kilometres above the ground.',
       'And then, on 12 February 2001, a slow, controlled descent. It took 69 high-resolution photographs on the way down and touched the surface at 19:44 UT at a gentle 6.4 kilometres per hour, just south of a saddle-shaped feature named Himeros.',
-      'This was the first time a U.S. spacecraft had been first to land on a celestial body — the Soviets having got there first at the Moon, Mars and Venus.',
+      'NEAR became the first spacecraft to land on an asteroid.',
       'And then the part nobody expected: the orbiter survived the contact. It kept returning valuable data, especially from its gamma-ray spectrometer, for about two weeks. Last contact was 28 February 2001 — the spacecraft succumbing to the cold, minus 173 °C.',
       'In the end NEAR returned about ten times more data than planned, including 160,000 images, and mapped more than 70 percent of the surface. It also established that Eros has no magnetic field.',
     ],
@@ -346,7 +350,7 @@ export const SCENES: Record<string, SceneDefinition> = {
     copy: [
       'There is a plaque on the Moon that says we came in peace for all mankind.',
       'There is a plaque on the Moon in memory of fourteen people who died trying to get there. There is a small figure beside it.',
-      'There is a mirror on the Moon that still reflects a laser fired from Earth tonight, because it was built with no moving parts and needs no power to do the only thing it was made for.',
+      'There is a mirror on the Moon that can reflect lasers fired from Earth, because it was built with no moving parts and needs no power to do the only thing it was made for.',
       'There is a helicopter in a crater on Mars that flew seventy-two times and cannot fly again.',
       'There is a telescope in an empty orbit that found more than 2,600 worlds and then ran out of fuel.',
       'And there is a spacecraft carrying a drawing of a man and a woman and a map to our star, heading in the direction of the constellation Taurus. Its last signal reached Earth in 2003.',

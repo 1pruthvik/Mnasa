@@ -29,7 +29,7 @@ export function Chapter03MarsLong() {
 
 
       {/* Opportunity Rover at Perseverance Valley */}
-      {scene === '3.1' && <OpportunityRover />}
+      {scene === '3.1' && <NasaModel url="/models/opportunity.glb" position={[-8, -0.2, -8]} size={4.3} fallback={<OpportunityRover />} />}
 
       {/* InSight Lander at Elysium Planitia */}
       {scene === '3.2' && <NasaModel url="/models/insight.glb" position={[4, -0.2, -6]} size={8} fallback={<InSightLander />} />}

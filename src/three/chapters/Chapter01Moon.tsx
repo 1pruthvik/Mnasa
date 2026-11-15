@@ -1,4 +1,6 @@
 import { useStore } from '../../store'
+import { isWorldOverview } from '../../data/experience'
+import { StarField } from '../env/StarField'
 import { NasaModel } from '../objects/NasaModel'
 import { MoonTerrain } from '../env/MoonTerrain'
 import { LMDescent } from '../objects/LMDescent'
@@ -8,6 +10,8 @@ import { ALSEPStation } from '../objects/ALSEPStation'
 
 export function Chapter01Moon() {
   const scene = useStore((s) => s.activeSceneId)
+  const overview = useStore((s) => isWorldOverview(s.progress))
+  if (overview) return <StarField density="sparse" />
   return (
     <group>
       {/* Stark Apollo Directional Sunlight (Stark contrast, minimal fill) */}

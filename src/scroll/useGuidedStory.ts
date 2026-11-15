@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BEATS } from '../contracts/beats'
 import { SCENES } from '../data/scenes'
-
-type Step = { progress: number; duration: number; sceneId: string }
+import { advanceGuidedFrame, TRANSITION_MS, type GuidedStep } from './timeline'
 
 export function useGuidedStory(enabled: boolean) {
-  const steps = useMemo<Step[]>(() => BEATS.flatMap((beat) => {
+  const steps = useMemo<GuidedStep[]>(() => BEATS.flatMap((beat) => {
     const copy = SCENES[beat.sceneId]?.copy ?? ['']
     const screens = copy
     return screens.map((text, i) => ({
@@ -49,26 +48,17 @@ export function useGuidedStory(enabled: boolean) {
     if (mode !== 'playing' || !enabled) return
     let raf = 0
     const tick = (now: number) => {
-      if (last.current !== null) elapsed.current += Math.min(now - last.current, 100) * speed
+      const delta = last.current === null ? 0 : Math.min(now - last.current, 100) * speed
       last.current = now
-      const current = steps[cursor.current]
-      const transition = 1200
-      if (elapsed.current >= current.duration + transition) {
-        if (cursor.current === steps.length - 1) {
-          setMode('finished')
-          last.current = null
-          return
-        }
-        elapsed.current = 0
-        cursor.current += 1
+      const frame = advanceGuidedFrame(steps, cursor.current, elapsed.current, delta)
+      cursor.current = frame.index
+      elapsed.current = frame.elapsed
+      setPosition(frame.progress)
+      if (frame.finished) {
+        setMode('finished')
+        last.current = null
+        return
       }
-      const step = steps[cursor.current]
-      const next = steps[cursor.current + 1]
-      if (next && elapsed.current > step.duration) {
-        const x = Math.min(1, (elapsed.current - step.duration) / transition)
-        const smooth = x * x * (3 - 2 * x)
-        setPosition(step.progress + (next.progress - step.progress) * smooth)
-      } else setPosition(step.progress)
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
@@ -100,7 +90,7 @@ export function useGuidedStory(enabled: boolean) {
     if (index !== cursor.current) { cursor.current = index; elapsed.current = 0 }
     setMode('playing')
   }
-  return { mode, speed, setSpeed, start, resume, pause: () => setMode('paused'), exit: () => setMode('scroll'), navigate, totalMinutes: Math.ceil(steps.reduce((n, s) => n + s.duration + 1200, 0) / 60000) }
+  return { mode, speed, setSpeed, start, resume, pause: () => setMode('paused'), exit: () => setMode('scroll'), navigate, totalMinutes: Math.ceil(steps.reduce((n, s) => n + s.duration + TRANSITION_MS, 0) / 60000) }
 }
 
 // Store access outside React renders, also keeps the very first programmatic frame in sync.

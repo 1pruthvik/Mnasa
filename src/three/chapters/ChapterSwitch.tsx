@@ -7,10 +7,13 @@ import { Chapter03MarsLong } from './Chapter03MarsLong'
 import { Chapter04Belt } from './Chapter04Belt'
 import { Chapter05Anywhere } from './Chapter05Anywhere'
 import { Chapter06Inventory } from './Chapter06Inventory'
+import { Travel, travelAt } from './Travel'
 
 export default function ChapterSwitch() {
   const activeChapter = useStore((s) => s.activeChapter as ChapterId)
 
+  const route = useStore((s) => travelAt(s.progress))
+  if (route) return <Travel route={route} />
   switch (activeChapter) {
     case 'ch00-descent':
       return <Chapter00Descent />
