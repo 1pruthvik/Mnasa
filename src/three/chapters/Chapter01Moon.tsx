@@ -24,7 +24,7 @@ export function Chapter01Moon() {
         shadow-mapSize={[2048, 2048]}
       />
 
-      {/* Realistic Cratered Lunar Terrain with Boulders and Earthrise */}
+      {/* Illustrative lunar terrain with photo-derived regolith and Earthrise */}
       <MoonTerrain />
 
       {/* Apollo 11 Eagle Descent Stage at [0, 0, 0] */}

@@ -112,3 +112,5 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid
 @media(max-width:767px) { .explorer-backdrop { padding: 10px; }.explorer-content { grid-template-columns: 1fr; }.explorer-header { padding: 13px 17px; }.explorer-header h2 { font-size: 23px; }.explorer-stage { min-height: 38vh; }.explorer-info { padding: 17px; }.explorer-info select { margin: 8px 0 16px; }.explorer-info h3 { font-size: 24px; }.explorer-rotate { margin-top: 15px; }.model-open, .ending-actions button { margin-top: 8px; padding: 8px 10px; } }
 .travel-label { position: fixed; z-index: 5; right: 5%; top: 100px; color: #d8c4b3; font: 9px ui-monospace,monospace; letter-spacing: .15em; }.travel-label span { display: block; color: #8898a5; margin-top: 8px; text-align: right; }
 @media(max-width:767px) { .travel-label { right: 15px; top: 65px; font-size: 8px; } }
+
+.scene-source-links { display: flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }

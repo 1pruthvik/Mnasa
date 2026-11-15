@@ -71,6 +71,9 @@ export const Credits: React.FC<CreditsProps> = ({ isOpen, onClose }) => {
               <strong>Planet imagery:</strong> NASA 3D Resources (Earth relief, Mars, Venus and Jupiter); lunar globe from NASA SVS LROC/LOLA Moon Kit. Global maps are historical or illustrative, not live. Earth and Venus use visualization colors. The spiral galaxy artwork is AI-generated, not a photograph of the Milky Way.
             </p>
             <p className="text-slate-700 leading-relaxed text-[11px]">
+              <strong>Surface textures:</strong> Cropped Apollo 11 lunar regolith photo (NASA) and Spirit rover soil image PIA05116 (NASA/JPL/Cornell). Repeated and processed on procedural terrain, not a site reconstruction.
+            </p>
+            <p className="text-slate-700 leading-relaxed text-[11px]">
               <strong>Martian Wind Recording:</strong> {UI_COPY.audio.credit}. Captured by InSight SEIS on 1 December 2018.
             </p>
             <p className="text-slate-700 leading-relaxed text-[11px]">
