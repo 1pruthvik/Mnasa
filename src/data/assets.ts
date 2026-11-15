@@ -146,3 +146,4 @@ export const ASSET_MANIFEST: AssetRecord[] = [
     description: 'Visible Earth global surface texture map.',
   },
 ]
+

@@ -5,6 +5,7 @@ import { ProgressRail } from './ui/ProgressRail'
 import { ObjectLabels } from './ui/ObjectLabel'
 import { TelemetryHUD } from './ui/TelemetryHUD'
 import { AtlasNavHeader } from './ui/AtlasNavHeader'
+import { GuidedDemoControls } from './ui/GuidedDemoControls'
 import { Footer } from './ui/Footer'
 import { FallbackStory } from './ui/FallbackStory'
 import { Credits } from './ui/Credits'
@@ -13,6 +14,7 @@ import { MarsMap } from './ui/MarsMap'
 import { useStore } from './store'
 import { useBootCapability } from './useBootCapability'
 import { useLenis } from './scroll/useLenis'
+import { useGuidedDemo } from './scroll/useGuidedDemo'
 import { BEATS } from './contracts/beats'
 import './contracts/tokens.css'
 
@@ -29,6 +31,9 @@ export default function App() {
 
   const isFallback = readingMode || reducedMotion || tier === 'none' || !webglOk
   useLenis(!isFallback)
+
+  // Autonomous guided playback controller
+  useGuidedDemo()
 
   const handleScrollToBeat = (t: number) => {
     const max = document.documentElement.scrollHeight - window.innerHeight
@@ -56,10 +61,14 @@ export default function App() {
       ) : (
         <>
           <CanvasRoot />
-          <Overlay onScrollToScene={handleScrollToScene} />
+          <Overlay
+            onScrollToScene={handleScrollToScene}
+            onScrollToExplore={() => handleScrollToBeat(0.045)}
+          />
           <ObjectLabels />
           <TelemetryHUD />
           <ProgressRail onScrollTo={handleScrollToBeat} />
+          <GuidedDemoControls />
           <Footer
             onOpenCredits={() => setCreditsOpen(true)}
             onOpenMap={() => setMapModalOpen('lunar')}
@@ -99,9 +108,16 @@ export default function App() {
                     : 'bg-slate-800 text-slate-300'
                 }`}
               >
-                Mars Surface Sites
+                Mars (Global Basemap)
+              </button>
+              <button
+                onClick={() => setMapModalOpen(null)}
+                className="px-3 py-1 rounded text-xs font-mono bg-slate-800 text-slate-400 hover:text-white cursor-pointer ml-4"
+              >
+                Close
               </button>
             </div>
+
             {mapModalOpen === 'lunar' ? (
               <LunarMap
                 onClose={() => setMapModalOpen(null)}

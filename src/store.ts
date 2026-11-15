@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { ChapterId, ZoomStop } from './contracts/types'
 import { beatAt, stopAt } from './contracts/beats'
+import { STORYBOARD, getTotalDemoDuration } from './data/storyboard'
 
 export type Tier = 'none' | 'low' | 'high'
 export type PerfLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -10,6 +11,9 @@ export interface LabelPos {
   y: number
   visible: boolean
 }
+
+export type DemoState = 'manual' | 'playing' | 'paused' | 'finished'
+export type DemoSpeed = 'normal' | 'slow'
 
 export interface AppState {
   // ── written by the scroll system (the only writer of progress)
@@ -40,6 +44,13 @@ export interface AppState {
   audioUnlocked: boolean
   labelPositions: Record<string, LabelPos>
 
+  // ── Guided Demo State Machine
+  demoState: DemoState
+  demoSpeed: DemoSpeed
+  demoShotIndex: number
+  demoRemainingHold: number
+  demoTotalDuration: number
+
   setProgress: (p: number) => void
   setPerfLevel: (l: PerfLevel) => void
   setCapability: (c: { webglOk: boolean; tier: Tier; reducedMotion: boolean }) => void
@@ -52,6 +63,18 @@ export interface AppState {
   setLabelsOn: (v: boolean) => void
   unlockAudio: () => void
   setLabelPositions: (p: Record<string, LabelPos>) => void
+
+  // ── Guided Demo Actions
+  startDemo: (fromBeginning?: boolean) => void
+  pauseDemo: () => void
+  resumeDemo: () => void
+  nextDemoShot: () => void
+  prevDemoShot: () => void
+  exitDemo: () => void
+  setDemoSpeed: (s: DemoSpeed) => void
+  setDemoShotIndex: (i: number) => void
+  setDemoRemainingHold: (sec: number) => void
+  finishDemo: () => void
 }
 
 const initialBeat = beatAt(0)
@@ -79,6 +102,12 @@ export const useStore = create<AppState>((set, get) => ({
   labelsOn: true,
   audioUnlocked: false,
   labelPositions: {},
+
+  demoState: 'manual',
+  demoSpeed: 'normal',
+  demoShotIndex: 0,
+  demoRemainingHold: 0,
+  demoTotalDuration: getTotalDemoDuration('normal'),
 
   setProgress: (p) => {
     const q = Math.min(1, Math.max(0, p))
@@ -119,5 +148,84 @@ export const useStore = create<AppState>((set, get) => ({
   setLabelsOn: (v) => set({ labelsOn: v }),
   unlockAudio: () => set({ audioUnlocked: true }),
   setLabelPositions: (p) => set({ labelPositions: p }),
-}))
 
+  startDemo: (fromBeginning = true) => {
+    const currentProgress = get().progress
+    let startIndex = 0
+    if (!fromBeginning) {
+      const idx = STORYBOARD.findIndex(
+        (s) => currentProgress >= s.startT && currentProgress < s.endT
+      )
+      startIndex = idx >= 0 ? idx : 0
+    }
+    const shot = STORYBOARD[startIndex]
+    set({
+      demoState: 'playing',
+      demoShotIndex: startIndex,
+      demoRemainingHold: shot.holdDuration,
+    })
+  },
+
+  pauseDemo: () => {
+    if (get().demoState === 'playing') {
+      set({ demoState: 'paused' })
+    }
+  },
+
+  resumeDemo: () => {
+    if (get().demoState === 'paused') {
+      set({ demoState: 'playing' })
+    }
+  },
+
+  nextDemoShot: () => {
+    const cur = get().demoShotIndex
+    if (cur < STORYBOARD.length - 1) {
+      const nextIdx = cur + 1
+      const shot = STORYBOARD[nextIdx]
+      set({
+        demoShotIndex: nextIdx,
+        demoRemainingHold: shot.holdDuration,
+        demoState: 'playing',
+      })
+    } else {
+      set({ demoState: 'finished' })
+    }
+  },
+
+  prevDemoShot: () => {
+    const cur = get().demoShotIndex
+    if (cur > 0) {
+      const prevIdx = cur - 1
+      const shot = STORYBOARD[prevIdx]
+      set({
+        demoShotIndex: prevIdx,
+        demoRemainingHold: shot.holdDuration,
+        demoState: 'playing',
+      })
+    }
+  },
+
+  exitDemo: () => {
+    set({ demoState: 'manual' })
+  },
+
+  setDemoSpeed: (speed) => {
+    set({
+      demoSpeed: speed,
+      demoTotalDuration: getTotalDemoDuration(speed),
+    })
+  },
+
+  setDemoShotIndex: (index) => {
+    set({ demoShotIndex: index })
+  },
+
+  setDemoRemainingHold: (sec) => {
+    set({ demoRemainingHold: sec })
+  },
+
+  finishDemo: () => {
+    set({ demoState: 'finished' })
+  },
+}))
