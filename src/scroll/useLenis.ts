@@ -1,68 +1,22 @@
-import Lenis from 'lenis'
 import { useEffect } from 'react'
 import { useStore } from '../store'
 
+// Native scroll is the single progress writer. Programmatic guided playback moves
+// the same document, so the canvas and the narrative always share one timeline.
 export function useLenis(enabled: boolean) {
   const setProgress = useStore((s) => s.setProgress)
-
   useEffect(() => {
-    if (!enabled) {
-      // Passive native scroll fallback
-      const onNativeScroll = () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight
-        setProgress(max > 0 ? window.scrollY / max : 0)
-      }
-      window.addEventListener('scroll', onNativeScroll, { passive: true })
-      onNativeScroll()
-      return () => window.removeEventListener('scroll', onNativeScroll)
-    }
-
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t: number) => 1 - Math.pow(1 - t, 3),
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.6,
-      syncTouch: false, // native touch scroll feels better on iOS
-      autoRaf: false,  // driven with our own rAF loop
-    })
-
-    let raf = 0
-    let running = true
-
-    const loop = (time: number) => {
-      if (!running) return
-      lenis.raf(time)
-      raf = requestAnimationFrame(loop)
-    }
-    raf = requestAnimationFrame(loop)
-
-    // Single source of progress
-    const onScroll = () => {
+    if (!enabled) return
+    const update = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight
-      setProgress(max > 0 ? lenis.scroll / max : 0)
+      setProgress(max > 0 ? window.scrollY / max : 0)
     }
-    lenis.on('scroll', onScroll)
-    onScroll()
-
-    const onVis = () => {
-      running = document.visibilityState === 'visible'
-      if (running) {
-        raf = requestAnimationFrame(loop)
-      } else {
-        cancelAnimationFrame(raf)
-        lenis.stop()
-      }
-    }
-    document.addEventListener('visibilitychange', onVis)
-
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    update()
     return () => {
-      running = false
-      cancelAnimationFrame(raf)
-      document.removeEventListener('visibilitychange', onVis)
-      lenis.off('scroll', onScroll)
-      lenis.destroy()
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
     }
   }, [enabled, setProgress])
 }
-

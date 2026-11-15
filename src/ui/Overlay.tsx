@@ -1,62 +1,83 @@
-import React from 'react'
-import { beatAt, localU } from '../contracts/beats'
+import React, { useEffect, useState } from 'react'
+import { BEATS, beatAt, localU } from '../contracts/beats'
 import { SCENES } from '../data/scenes'
+import { SCENE_CONTEXT } from '../data/sceneContext'
+import { isWorldOverview } from '../data/experience'
+import { travelAt } from '../three/chapters/Travel'
 import { useStore } from '../store'
 import { SceneText } from './SceneText'
 import { InventoryTable } from './InventoryTable'
 
 interface OverlayProps {
   onScrollToScene?: (sceneId: string) => void
+  onOpenDetails?: () => void
+  onExploreModel?: () => void
+  onReplay?: () => void
 }
 
-export const Overlay: React.FC<OverlayProps> = ({ onScrollToScene }) => {
+export const Overlay: React.FC<OverlayProps> = ({ onScrollToScene, onOpenDetails, onExploreModel, onReplay }) => {
   const progress = useStore((s) => s.progress)
   const beat = beatAt(progress)
-  const sceneDef = SCENES[beat.sceneId]
+  const scene = SCENES[beat.sceneId]
+  const intro = beat.sceneId === '0.1'
+  const worldOverview = isWorldOverview(progress)
+  const route = travelAt(progress)
+  let context = SCENE_CONTEXT[beat.sceneId]
+  const screens = scene?.copy || ['']
+  const idx = Math.min(screens.length - 1, Math.floor(localU(progress, beat.t0, beat.t1) * screens.length))
+  let title = scene?.title
+  let visualCredit = 'ILLUSTRATION · NOT TO SCALE'
+  if (intro) {
+    title = idx === 0 ? 'A universe of galaxies' : idx < 3 ? 'Our galaxy, the Milky Way' : 'Our solar system'
+    context = idx < 3
+      ? { location: idx === 0 ? 'THE UNIVERSE / GALAXIES' : 'THE UNIVERSE / THE MILKY WAY', fact: 'The Milky Way is our home galaxy. The Sun is one of its many stars.', source: 'https://science.nasa.gov/universe/galaxies/' }
+      : { location: 'THE MILKY WAY / SOLAR SYSTEM', fact: 'Eight planets orbit the Sun. This solar system view is schematic, not to scale.', source: 'https://science.nasa.gov/solar-system/' }
+    visualCredit = idx < 2 ? 'AI-GENERATED GALAXY ILLUSTRATION' : 'SCHEMATIC · NOT TO SCALE'
+  } else if (worldOverview) {
+    const moon = beat.sceneId === '1.1'
+    title = moon ? 'Our Moon' : 'Mars, the red planet'
+    context = moon
+      ? { location: 'SOLAR SYSTEM / THE MOON', fact: 'The Moon has an extremely thin exosphere and strong day-to-night temperature changes.', source: 'https://science.nasa.gov/moon/facts/' }
+      : { location: 'SOLAR SYSTEM / MARS', fact: 'Mars has a thin atmosphere made mostly of carbon dioxide.', source: 'https://science.nasa.gov/mars/facts/' }
+    visualCredit = moon ? 'NASA LRO/LOLA · GLOBAL MAP' : 'NASA MARS TEXTURE · GLOBE ILLUSTRATION'
+  } else if (beat.sceneId === '0.2') visualCredit = 'NASA EARTH RELIEF · ELEVATION COLORS'
+  else if (beat.sceneId === '1.1') visualCredit = 'LANDING CONFIGURATION · ILLUSTRATION'
+  else if (beat.sceneId.startsWith('6.')) visualCredit = 'GLOBAL MAPS · EARTH RELIEF COLORS · NOT TO SCALE'
+  const surfaceWorld = !worldOverview && !route && beat.sceneId.startsWith('1.') ? 'moon' : !worldOverview && !route && (beat.sceneId.startsWith('2.') || beat.sceneId.startsWith('3.')) ? 'mars' : null
+  if (surfaceWorld) visualCredit = beat.sceneId === '2.2' ? 'SPACE RADAR MODEL · NASA PHOTO-TEXTURED TERRAIN' : 'PHOTO-TEXTURED TERRAIN · ILLUSTRATIVE'
+  if (route) visualCredit = 'GLOBAL MAPS · TRANSIT ILLUSTRATION, NOT TO SCALE'
+  const contextDetails = context && <div className="scene-fact"><p>{context.fact}</p><div className="scene-source"><div className="scene-source-links">{surfaceWorld && <a href={surfaceWorld === 'moon' ? 'https://science.nasa.gov/biological-physical/leveraging-lunar-regolith-to-further-space-exploration/' : 'https://science.nasa.gov/photojournal/the-mystery-soil/'} target="_blank" rel="noreferrer">Terrain photo ↗</a>}<a href={context.source} target="_blank" rel="noreferrer">NASA source ↗</a></div></div></div>
+  const [inventoryOpen, setInventoryOpen] = useState(false)
 
-  const screens = sceneDef?.copy || ['']
-  const u = localU(progress, beat.t0, beat.t1)
-  const per = 1 / screens.length
-  const idx = Math.min(screens.length - 1, Math.floor(u / per))
-  const localUInScreen = (u - idx * per) / per
+  useEffect(() => {
+    if (!inventoryOpen) return
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setInventoryOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [inventoryOpen])
 
-  const isInventoryScene = beat.sceneId === '6.1'
-
-  return (
-    <section
-      className="fixed inset-0 pointer-events-none z-10 flex flex-col justify-between p-6 md:p-12 lg:p-16 select-none overflow-hidden"
-      role="region"
-      aria-label="Narrative"
-    >
-      {/* Background scrim for text legibility (left scrim on desktop, bottom scrim on mobile) */}
-      <div className="absolute inset-y-0 left-0 w-full md:w-3/5 lg:w-1/2 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent pointer-events-none" />
-
-      {/* Main Narrative Content Box */}
-      <div className="relative z-10 my-auto max-w-xl max-h-[82vh] overflow-y-auto pr-2 pb-16">
-        {isInventoryScene ? (
-          <div className="pointer-events-auto">
-            <InventoryTable onSelectScene={onScrollToScene} />
-          </div>
-        ) : (
-          <SceneText
-            key={`${beat.id}:${idx}`}
-            beat={beat}
-            text={screens[idx] || ''}
-            u={localUInScreen}
-            first={idx === 0}
-            last={idx === screens.length - 1}
-          />
-        )}
+  return <>
+    <section className="story-overlay fixed inset-0 pointer-events-none z-10 overflow-hidden" aria-label="Narrative">
+      <div className="story-scrim" />
+      <div className="story-card pointer-events-auto">
+        <div className="scene-location">{context?.location}<span className="scene-number">{String(BEATS.findIndex(b => b.sceneId === beat.sceneId) + 1).padStart(2, '0')} / 17</span></div>
+        {beat.sceneId === '6.1' ? <article className="inventory-intro">
+          <h2>The full inventory</h2>
+          <p>{screens[idx]}</p>
+          <button className="inventory-open" onClick={() => { onOpenDetails?.(); setInventoryOpen(true) }}>Explore the archive <span>↗</span></button>
+          {contextDetails && <details className="scene-details" onToggle={event => { if (event.currentTarget.open) onOpenDetails?.() }}><summary>Details &amp; sources <span>+</span></summary><div className="scene-details-content">{contextDetails}</div></details>}
+        </article> : <SceneText key={beat.id} beat={beat} title={title} text={screens[idx] || ''} hideDetails={worldOverview || (intro && idx < 3)} context={contextDetails} onOpenDetails={onOpenDetails} />}
+        {beat.sceneId === '6.2' && <div className="ending-actions"><button onClick={onReplay}>↺ Replay the journey</button><button onClick={() => { onOpenDetails?.(); setInventoryOpen(true) }}>Explore the archive ↗</button></div>}
+        {!beat.sceneId.startsWith('6.') && (!intro || idx >= 3) && <button className="model-open" onClick={onExploreModel}>◌ &nbsp; Explore in 3D <span>↗</span></button>}
+        <div className="visual-credit">{visualCredit}</div>
       </div>
-
-      {/* Visually hidden summary for screen readers — guarantees complete accessible story regardless of scroll */}
-      <div className="sr-only" aria-live="polite">
-        <h2>{sceneDef?.title}</h2>
-        {sceneDef?.copy.map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
-      </div>
+      {route && <div className="travel-label">IN TRANSIT &nbsp; / &nbsp; {route === 'earth-moon' ? 'EARTH → MOON' : 'MOON → MARS'} <span>NOT TO SCALE</span></div>}
+      <div className="sr-only" aria-live="polite"><h2>{title}</h2><p>{screens[idx]}</p></div>
     </section>
-  )
+    {inventoryOpen && <div className="inventory-modal" role="dialog" aria-modal="true" aria-label="The full inventory">
+      <div className="inventory-window"><button className="inventory-close" autoFocus onClick={() => setInventoryOpen(false)} aria-label="Close inventory">✕</button>
+        <InventoryTable onSelectScene={(id) => { setInventoryOpen(false); onScrollToScene?.(id) }} />
+      </div>
+    </div>}
+  </>
 }
-

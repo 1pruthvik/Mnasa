@@ -71,7 +71,7 @@ export const LunarMap: React.FC<LunarMapProps> = ({ onClose }) => {
                   {obj.shortName}
                 </text>
                 <text x={x + 14} y={y - 1} fill="#94a3b8" fontSize="7.5" fontFamily="monospace">
-                  {obj.lat}° N, {obj.lon}° E
+                  {Math.abs(obj.lat!)}° {obj.lat! >= 0 ? 'N' : 'S'}, {Math.abs(obj.lon!)}° {obj.lon! >= 0 ? 'E' : 'W'}
                 </text>
               </g>
             )
