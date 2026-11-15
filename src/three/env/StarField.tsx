@@ -52,8 +52,8 @@ export default function StarField({ density = 'dense' }: StarFieldProps) {
     const mult = (isDense ? 1.0 : 0.25) * starScale
     return [
       { count: Math.floor(120000 * mult), radius: [500, 950] as [number, number], size: 1.0, drift: 0.02 },
-      { count: Math.floor(40000 * mult),  radius: [300, 600] as [number, number], size: 1.5, drift: 0.06 },
-      { count: Math.floor(15000 * mult),  radius: [100, 350] as [number, number], size: 2.2, drift: 0.14 },
+      { count: Math.floor(40000 * mult), radius: [300, 600] as [number, number], size: 1.5, drift: 0.06 },
+      { count: Math.floor(15000 * mult), radius: [100, 350] as [number, number], size: 2.2, drift: 0.14 },
     ]
   }, [isDense, starScale])
 
@@ -69,7 +69,7 @@ export default function StarField({ density = 'dense' }: StarFieldProps) {
         const phi = Math.acos(2.0 * v - 1.0)
         const r = l.radius[0] + Math.random() * (l.radius[1] - l.radius[0])
 
-        pos[i * 3]     = r * Math.sin(phi) * Math.cos(theta)
+        pos[i * 3] = r * Math.sin(phi) * Math.cos(theta)
         pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta)
         pos[i * 3 + 2] = r * Math.cos(phi)
         seed[i] = Math.random()
@@ -141,3 +141,4 @@ export default function StarField({ density = 'dense' }: StarFieldProps) {
     </group>
   )
 }
+

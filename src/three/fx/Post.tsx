@@ -1,7 +1,6 @@
 // src/three/fx/Post.tsx
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import { useStore } from '../../store'
-import Grain from './Grain'
 
 export default function Post() {
   const lowTier = useStore(s => s.lowTier)
@@ -20,7 +19,6 @@ export default function Post() {
         luminanceSmoothing={0.3}
         mipmapBlur
       />
-      {!isInventory && <Grain opacity={0.035} />}
       <Vignette
         eskil={false}
         offset={0.32}
@@ -29,3 +27,4 @@ export default function Post() {
     </EffectComposer>
   )
 }
+

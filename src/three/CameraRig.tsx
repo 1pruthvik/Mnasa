@@ -12,7 +12,7 @@ export default function CameraRig() {
 
   // Two curves: where we are, and what we are looking at. Both authored.
   const { posCurve, lookCurve } = useMemo(() => {
-    const posCurve  = new THREE.CatmullRomCurve3(DESCENT.map(w => new THREE.Vector3(...w.pos)),  false, 'catmullrom', 0.5)
+    const posCurve = new THREE.CatmullRomCurve3(DESCENT.map(w => new THREE.Vector3(...w.pos)), false, 'catmullrom', 0.5)
     const lookCurve = new THREE.CatmullRomCurve3(DESCENT.map(w => new THREE.Vector3(...w.look)), false, 'catmullrom', 0.5)
     posCurve.arcLengthDivisions = 1200
     lookCurve.arcLengthDivisions = 1200
@@ -25,7 +25,7 @@ export default function CameraRig() {
 
   const tmpP = useMemo(() => new THREE.Vector3(), [])
   const tmpL = useMemo(() => new THREE.Vector3(), [])
-  const up   = useMemo(() => new THREE.Vector3(0, 1, 0), [])
+  const up = useMemo(() => new THREE.Vector3(0, 1, 0), [])
   const clock = useRef(0)
 
   useFrame((_, dt) => {

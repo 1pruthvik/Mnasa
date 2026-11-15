@@ -1,10 +1,13 @@
 // src/App.tsx
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Lenis from 'lenis'
 import { useStore } from './store'
-import { TOTAL_SCREENS, beatAt, stopAt } from './contracts/beats'
+import { TOTAL_SCREENS, beatAt, stopAt, BEATS } from './contracts/beats'
 import { detectCapability } from './three/systems/capability'
 import CanvasRoot from './three/CanvasRoot'
+import NasaDataDrawer from './ui/NasaDataDrawer'
+import FactDrawer from './ui/FactDrawer'
+import ScrollScrubber from './ui/ScrollScrubber'
 
 export function App() {
   const progress = useStore(s => s.progress)
@@ -15,6 +18,7 @@ export function App() {
   const labelsOn = useStore(s => s.labelsOn)
   const filterWorkingOnly = useStore(s => s.filterWorkingOnly)
   const setFilterWorkingOnly = useStore(s => s.setFilterWorkingOnly)
+  const [dataDrawerOpen, setDataDrawerOpen] = useState(false)
   const lenisRef = useRef<Lenis | null>(null)
 
   // 1. Detect device capability once on boot
@@ -44,6 +48,7 @@ export function App() {
     }
 
     lenis.on('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
 
     let rafId: number
     function raf(time: number) {
@@ -53,10 +58,28 @@ export function App() {
     rafId = requestAnimationFrame(raf)
 
     return () => {
+      window.removeEventListener('scroll', onScroll)
       cancelAnimationFrame(rafId)
       lenis.destroy()
     }
   }, [])
+
+  const handleSeek = (targetProgress: number) => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+    const targetY = targetProgress * maxScroll
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(targetY, { duration: 1.5 })
+    } else {
+      window.scrollTo({ top: targetY, behavior: 'smooth' })
+    }
+  }
+
+  const handleJumpToScene = (sceneId: string) => {
+    const beat = BEATS.find(b => b.sceneId === sceneId)
+    if (beat) {
+      handleSeek(beat.t0 + 0.005)
+    }
+  }
 
   const currentBeat = beatAt(progress)
   const currentStop = stopAt(progress)
@@ -65,6 +88,19 @@ export function App() {
     <div style={{ position: 'relative', width: '100%', minHeight: `${TOTAL_SCREENS * 100}vh`, background: '#05070d' }}>
       {/* ── 3D Viewport: Single CanvasRoot (fixed position) ── */}
       <CanvasRoot />
+
+      {/* ── Active Spacecraft Fact Drawer (floating on-screen) ── */}
+      <FactDrawer />
+
+      {/* ── Timeline Scroll Scrubber (vertical dots on right) ── */}
+      <ScrollScrubber onSeek={handleSeek} />
+
+      {/* ── NASA Data & Resources Slide-out Drawer ── */}
+      <NasaDataDrawer
+        isOpen={dataDrawerOpen}
+        onClose={() => setDataDrawerOpen(false)}
+        onJumpToScene={handleJumpToScene}
+      />
 
       {/* ── Floating 2D Screen Anchored Labels Bridge (from LabelBridge / projectToScreen) ── */}
       {labelsOn && (
@@ -129,11 +165,28 @@ export function App() {
           </div>
         </div>
 
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '12px', letterSpacing: '0.08em' }}>
-            {activeChapter}
+        <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', pointerEvents: 'auto' }}>
+            <button
+              onClick={() => setDataDrawerOpen(true)}
+              style={{
+                background: 'rgba(255, 204, 0, 0.15)',
+                border: '1px solid rgba(255, 204, 0, 0.4)',
+                color: '#ffcc00',
+                padding: '4px 10px',
+                borderRadius: '3px',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                fontSize: '11px',
+                letterSpacing: '0.06em',
+                fontWeight: 600,
+              }}
+            >
+              ★ NASA DATA & ARCHIVE
+            </button>
+            <span style={{ fontSize: '12px', letterSpacing: '0.08em' }}>{activeChapter}</span>
           </div>
-          <div style={{ fontSize: '11px', color: '#8899aa', marginTop: '4px' }}>
+          <div style={{ fontSize: '11px', color: '#8899aa' }}>
             ALTITUDE SCROLL: {(progress * 100).toFixed(1)}% · BEAT {activeBeatId}
           </div>
         </div>
@@ -178,7 +231,7 @@ export function App() {
 
         <div style={{ display: 'flex', gap: '16px', letterSpacing: '0.06em' }}>
           <span>STOP: {activeStop.toUpperCase()}</span>
-          <span>SCROLL TO DESCEND</span>
+          <span>SCROLL OR USE RIGHT RAIL TO NAVIGATE</span>
         </div>
       </footer>
     </div>
