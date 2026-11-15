@@ -1,62 +1,50 @@
-import React from 'react'
-import { beatAt, localU } from '../contracts/beats'
+import React, { useEffect, useState } from 'react'
+import { BEATS, beatAt, localU } from '../contracts/beats'
 import { SCENES } from '../data/scenes'
+import { SCENE_CONTEXT } from '../data/sceneContext'
 import { useStore } from '../store'
 import { SceneText } from './SceneText'
 import { InventoryTable } from './InventoryTable'
 
 interface OverlayProps {
   onScrollToScene?: (sceneId: string) => void
+  onOpenDetails?: () => void
 }
 
-export const Overlay: React.FC<OverlayProps> = ({ onScrollToScene }) => {
+export const Overlay: React.FC<OverlayProps> = ({ onScrollToScene, onOpenDetails }) => {
   const progress = useStore((s) => s.progress)
   const beat = beatAt(progress)
-  const sceneDef = SCENES[beat.sceneId]
+  const scene = SCENES[beat.sceneId]
+  const context = SCENE_CONTEXT[beat.sceneId]
+  const screens = scene?.copy || ['']
+  const idx = Math.min(screens.length - 1, Math.floor(localU(progress, beat.t0, beat.t1) * screens.length))
+  const [inventoryOpen, setInventoryOpen] = useState(false)
 
-  const screens = sceneDef?.copy || ['']
-  const u = localU(progress, beat.t0, beat.t1)
-  const per = 1 / screens.length
-  const idx = Math.min(screens.length - 1, Math.floor(u / per))
-  const localUInScreen = (u - idx * per) / per
+  useEffect(() => {
+    if (!inventoryOpen) return
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setInventoryOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [inventoryOpen])
 
-  const isInventoryScene = beat.sceneId === '6.1'
-
-  return (
-    <section
-      className="fixed inset-0 pointer-events-none z-10 flex flex-col justify-between p-6 md:p-12 lg:p-16 select-none overflow-hidden"
-      role="region"
-      aria-label="Narrative"
-    >
-      {/* Background scrim for text legibility (left scrim on desktop, bottom scrim on mobile) */}
-      <div className="absolute inset-y-0 left-0 w-full md:w-3/5 lg:w-1/2 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent pointer-events-none" />
-
-      {/* Main Narrative Content Box */}
-      <div className="relative z-10 my-auto max-w-xl max-h-[82vh] overflow-y-auto pr-2 pb-16">
-        {isInventoryScene ? (
-          <div className="pointer-events-auto">
-            <InventoryTable onSelectScene={onScrollToScene} />
-          </div>
-        ) : (
-          <SceneText
-            key={`${beat.id}:${idx}`}
-            beat={beat}
-            text={screens[idx] || ''}
-            u={localUInScreen}
-            first={idx === 0}
-            last={idx === screens.length - 1}
-          />
-        )}
+  return <>
+    <section className="story-overlay fixed inset-0 pointer-events-none z-10 overflow-hidden" aria-label="Narrative">
+      <div className="story-scrim" />
+      <div className="story-card pointer-events-auto">
+        <div className="scene-location">{context?.location}<span className="scene-number">{String(BEATS.findIndex(b => b.sceneId === beat.sceneId) + 1).padStart(2, '0')} / 17</span></div>
+        {beat.sceneId === '6.1' ? <article className="inventory-intro">
+          <h2>The full inventory</h2>
+          <p>{screens[idx]}</p>
+          <button className="inventory-open" onClick={() => { onOpenDetails?.(); setInventoryOpen(true) }}>Explore the archive <span>↗</span></button>
+        </article> : <SceneText key={beat.id} beat={beat} text={screens[idx] || ''} onOpenDetails={onOpenDetails} />}
+        {context && <div className="scene-fact"><p>{context.fact}</p><div className="scene-source"><span>{beat.sceneId === '1.1' ? 'LANDING CONFIGURATION · ILLUSTRATION' : 'ILLUSTRATION · NOT TO SCALE'}</span><a href={context.source} target="_blank" rel="noreferrer">NASA source ↗</a></div></div>}
       </div>
-
-      {/* Visually hidden summary for screen readers — guarantees complete accessible story regardless of scroll */}
-      <div className="sr-only" aria-live="polite">
-        <h2>{sceneDef?.title}</h2>
-        {sceneDef?.copy.map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
-      </div>
+      <div className="sr-only" aria-live="polite"><h2>{scene?.title}</h2><p>{screens[idx]}</p></div>
     </section>
-  )
+    {inventoryOpen && <div className="inventory-modal" role="dialog" aria-modal="true" aria-label="The full inventory">
+      <div className="inventory-window"><button className="inventory-close" autoFocus onClick={() => setInventoryOpen(false)} aria-label="Close inventory">✕</button>
+        <InventoryTable onSelectScene={(id) => { setInventoryOpen(false); onScrollToScene?.(id) }} />
+      </div>
+    </div>}
+  </>
 }
-

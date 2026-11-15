@@ -7,7 +7,7 @@ import {
 
 export function NEARShoemaker() {
   return (
-    <group position={[-40, -4.8, -10]}>
+    <group position={[-40, -1.9, -7]}>
       {/* Octagonal Main Spacecraft Bus */}
       <mesh position={[0, 0.7, 0]} material={goldFoilMaterial}>
         <cylinderGeometry args={[0.9, 0.9, 1.2, 8]} />

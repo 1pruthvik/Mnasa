@@ -87,7 +87,7 @@ export const useStore = create<AppState>((set, get) => ({
     const s = stopAt(q)
 
     // Only allocate new state when derived values actually change
-    if (prev.activeBeatId !== b.id || prev.activeChapter !== b.chapter) {
+    if (prev.activeBeatId !== b.id || prev.activeChapter !== b.chapter || prev.activeStop !== s.id) {
       set({
         progress: q,
         activeBeatId: b.id,

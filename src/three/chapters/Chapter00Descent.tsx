@@ -1,10 +1,11 @@
+import { useStore } from '../../store'
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { StarField } from '../env/StarField'
-import { PaperPlane } from '../env/PaperPlane'
 
 export function Chapter00Descent() {
+  const scene = useStore(s => s.activeSceneId)
   const sunRef = useRef<THREE.Mesh>(null!)
   const coronaRef = useRef<THREE.Mesh>(null!)
 
@@ -76,7 +77,7 @@ export function Chapter00Descent() {
       </mesh>
 
       {/* Earth (Target of the descent) at [0, 0, 62] */}
-      <group position={[0, 0, 62]}>
+      <group visible={scene === '0.2'} position={[0, 0, 62]}>
         <mesh>
           <sphereGeometry args={[5.2, 32, 32]} />
           <meshStandardMaterial color="#2563eb" roughness={0.4} metalness={0.1} />
@@ -110,7 +111,7 @@ export function Chapter00Descent() {
       </mesh>
 
       {/* The Door Transition */}
-      <PaperPlane />
+
     </group>
   )
 }

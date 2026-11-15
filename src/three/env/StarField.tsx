@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -8,7 +8,7 @@ interface StarFieldProps {
 
 export function StarField({ density = 'dense' }: StarFieldProps) {
   const pointsRef = useRef<THREE.Points>(null!)
-  const count = density === 'dense' ? 6000 : 2500
+  const count = density === 'dense' ? 2400 : 1000
 
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3)
@@ -41,6 +41,20 @@ export function StarField({ density = 'dense' }: StarFieldProps) {
     return [pos, cols]
   }, [count])
 
+  const starTexture = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = 32
+    const ctx = canvas.getContext('2d')!
+    const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16)
+    gradient.addColorStop(0, 'rgba(255,255,255,1)')
+    gradient.addColorStop(.25, 'rgba(255,255,255,.8)')
+    gradient.addColorStop(1, 'rgba(255,255,255,0)')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, 32, 32)
+    return new THREE.CanvasTexture(canvas)
+  }, [])
+  useEffect(() => () => starTexture.dispose(), [starTexture])
+
   useFrame((_, dt) => {
     if (pointsRef.current) {
       pointsRef.current.rotation.y += dt * 0.003
@@ -61,7 +75,9 @@ export function StarField({ density = 'dense' }: StarFieldProps) {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={1.6}
+        size={1.0}
+        map={starTexture}
+        alphaTest={0.02}
         vertexColors
         transparent
         opacity={0.85}

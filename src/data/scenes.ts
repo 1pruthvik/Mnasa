@@ -90,7 +90,7 @@ export const SCENES: Record<string, SceneDefinition> = {
     copy: [
       'A few hundred billion stars. One of them is ours.',
       'Around it, eight planets. Around one of those planets, one moon. And on that moon, and on the fourth planet out, there are machines that stopped working decades ago and have not moved since.',
-      'This is not a story about garbage. It is a story about a filing system — the most patient filing system humans have ever built — and about fifteen pieces of hardware that are still filed, still numbered, still sitting exactly where the paperwork says they are.',
+      'This is not a story about garbage. It is a story about a filing system — the most patient filing system humans have ever built — and about fifteen pieces of hardware that are still filed, still numbered, recorded in the archive of exploration.',
     ],
     quoteId: 'q.0.1',
     widgets: [],
@@ -228,7 +228,7 @@ export const SCENES: Record<string, SceneDefinition> = {
     title: 'InSight: the machine that listened',
     kicker: 'Movement 03 · Mars Long',
     copy: [
-      'Every other Mars mission in this script looked at the surface. InSight was sent to ignore it.',
+      'While other missions explored the surface, InSight listened for clues about what lies beneath it.',
       'It landed on 26 November 2018 at 11:52:59 a.m. PT, near the equator on the western side of a flat, smooth plain called Elysium Planitia — 4.5 degrees north, 135.9 degrees east, just 600 kilometres from Curiosity’s landing site in Gale Crater. The site was chosen not for its surface features but for safety, because InSight’s purpose was to study the interior, not the ground.',
       'Planitia is Latin for a flat surface or plain. Elysium comes from the ancient Greek name for an afterlife paradise.',
       'Its two goals were to understand how rocky planets formed and evolved, and to find out how tectonically active Mars is today and how often meteorites hit it. To do it, the lander’s arm — over 1.8 metres long — lifted a seismometer and a heat flow probe off the deck and placed them on the ground, and then the spacecraft listened. It determined the size of the core, what it is made of and whether it is liquid or solid; the thickness and structure of the crust; the structure of the mantle; how warm the interior is and how much heat is still flowing out of it.',
@@ -243,7 +243,7 @@ export const SCENES: Record<string, SceneDefinition> = {
   },
   '3.3': {
     id: '3.3',
-    title: 'Ingenuity: seventy-two flights, and the last twenty-nine seconds',
+    title: 'Ingenuity: seventy-two flights on Mars',
     kicker: 'Movement 03 · Mars Long',
     copy: [
       'It rode to Mars strapped under the belly of the Perseverance rover and was designed to make no more than five test flights in thirty days. It was a technology demonstration. It was, on paper, disposable.',
@@ -332,9 +332,9 @@ export const SCENES: Record<string, SceneDefinition> = {
     kicker: 'Movement 06 · The Archive',
     copy: [
       'So here is the whole list, in the only order that matters: the order they went quiet.',
-      'Every object on that list is exactly where it was put. Not approximately. The coordinates were measured, published and archived, and they have not changed, because nothing up there moves on its own.',
+      'Some of these machines remain on planetary surfaces; others continue to travel through space. Their records preserve what we know about their journeys.',
       'This is the part people get wrong about abandoned equipment. It is not a mess left behind. It is a record kept in the only medium that cannot be edited: position.',
-      'We know that Surveyor 3 is at 3 degrees south, 23.41 degrees west because two men walked over to it and then men and women wrote it down. We know that InSight is in Elysium Planitia because an orbiter went back to photograph it after it stopped working. We know where Pioneer 10 is to within a metre per second because we have been tracking it, patiently, from the moment it stopped being able to answer.',
+      'Surveyor 3 was visited by Apollo 12 astronauts. InSight landed in Elysium Planitia. Pioneer 10 continues outward, but its last signal arrived in 2003; its present position is an estimate, not live tracking.',
       'The machines were abandoned. The addresses were not.',
     ],
     widgets: [],
@@ -349,7 +349,7 @@ export const SCENES: Record<string, SceneDefinition> = {
       'There is a mirror on the Moon that still reflects a laser fired from Earth tonight, because it was built with no moving parts and needs no power to do the only thing it was made for.',
       'There is a helicopter in a crater on Mars that flew seventy-two times and cannot fly again.',
       'There is a telescope in an empty orbit that found more than 2,600 worlds and then ran out of fuel.',
-      'And there is a spacecraft twelve billion kilometres away, still carrying a drawing of a man and a woman and a map to our star, heading for a red eye in the constellation of Taurus that it will not reach for two million years.',
+      'And there is a spacecraft carrying a drawing of a man and a woman and a map to our star, heading in the direction of the constellation Taurus. Its last signal reached Earth in 2003.',
       'None of them are lost. All of them are filed.',
       'Abandoned, but not forgotten.',
     ],

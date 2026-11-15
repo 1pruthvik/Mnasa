@@ -8,8 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "check-data": "node --loader ts-node/esm scripts/check-data.ts",
-    "check-copy": "node --loader ts-node/esm scripts/check-copy.ts"
+    "check-data": "node --experimental-strip-types scripts/check-data.ts",
+    "check-copy": "node --experimental-strip-types scripts/check-copy.ts",
+    "check-story": "node --experimental-strip-types scripts/check-story.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

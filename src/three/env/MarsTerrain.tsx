@@ -26,20 +26,22 @@ export function MarsTerrain() {
         y -= Math.pow((edgeDist - 100) * 0.04, 2)
       }
 
-      pos.setY(i, y)
+      // Keep the illustrative landing areas level with the models; relief rises only in the distance.
+      const blend = THREE.MathUtils.smoothstep(Math.hypot(x, z), 35, 90)
+      pos.setY(i, 1.8 + y * blend * 0.45)
     }
 
     geom.computeVertexNormals()
 
     // Scatter 80 Martian basalt rocks
     const rockMatrices: THREE.Matrix4[] = []
-    for (let j = 0; j < 80; j++) {
+    for (let j = 0; j < 40; j++) {
       const rx = (Math.random() - 0.5) * 180
       const rz = (Math.random() - 0.5) * 180
-      const scale = 0.25 + Math.random() * 0.9
+      const scale = 0.12 + Math.random() * 0.45
       const mat = new THREE.Matrix4()
       mat.compose(
-        new THREE.Vector3(rx, -1.8 + Math.random() * 0.6, rz),
+        new THREE.Vector3(rx, 1.8, rz),
         new THREE.Quaternion().setFromAxisAngle(
           new THREE.Vector3(Math.random(), 1, Math.random()).normalize(),
           Math.random() * Math.PI
@@ -57,7 +59,7 @@ export function MarsTerrain() {
       {/* Red Martian Landscape */}
       <mesh geometry={geometry} receiveShadow>
         <meshStandardMaterial
-          color="#b45309"
+          color="#a8684c"
           roughness={0.92}
           metalness={0.06}
         />
@@ -72,17 +74,16 @@ export function MarsTerrain() {
         }}
       >
         <dodecahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial color="#57291a" roughness={0.9} metalness={0.12} />
+        <meshStandardMaterial color="#755342" roughness={0.9} metalness={0.12} />
       </instancedMesh>
 
       {/* Martian Atmospheric Sky Dome */}
       <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[260, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+        <sphereGeometry args={[260, 32, 24]} />
         <meshBasicMaterial
-          color="#9a3412"
+          color="#835f55"
           side={THREE.BackSide}
-          transparent
-          opacity={0.32}
+          depthWrite={false}
         />
       </mesh>
     </group>

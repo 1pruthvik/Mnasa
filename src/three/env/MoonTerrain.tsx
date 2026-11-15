@@ -46,20 +46,22 @@ export function MoonTerrain() {
         y -= Math.pow((edgeDist - 90) * 0.05, 2)
       }
 
-      pos.setY(i, y)
+      // Keep the illustrative landing areas level with the models; relief rises only in the distance.
+      const blend = THREE.MathUtils.smoothstep(Math.hypot(x, z), 35, 90)
+      pos.setY(i, 1.8 + y * blend * 0.45)
     }
 
     geom.computeVertexNormals()
 
     // Generate rocks transforms
     const rockMatrices: THREE.Matrix4[] = []
-    for (let j = 0; j < 90; j++) {
+    for (let j = 0; j < 45; j++) {
       const rx = (Math.random() - 0.5) * 160
       const rz = (Math.random() - 0.5) * 160
-      const scale = 0.2 + Math.random() * 0.8
+      const scale = 0.12 + Math.random() * 0.45
       const mat = new THREE.Matrix4()
       mat.compose(
-        new THREE.Vector3(rx, -1.8 + Math.random() * 0.5, rz),
+        new THREE.Vector3(rx, 1.8, rz),
         new THREE.Quaternion().setFromAxisAngle(
           new THREE.Vector3(Math.random(), 1, Math.random()).normalize(),
           Math.random() * Math.PI

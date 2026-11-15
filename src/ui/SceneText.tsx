@@ -32,12 +32,10 @@ import { useReveal } from './motion/useReveal'
 interface SceneTextProps {
   beat: BeatDefinition
   text: string
-  u: number
-  first: boolean
-  last: boolean
+  onOpenDetails?: () => void
 }
 
-export const SceneText: React.FC<SceneTextProps> = ({ beat, text, first, last }) => {
+export const SceneText: React.FC<SceneTextProps> = ({ beat, text, onOpenDetails }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   useReveal(containerRef, [beat.id, text])
 
@@ -49,18 +47,9 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, first, last })
       ref={containerRef}
       className="pointer-events-auto max-w-xl text-slate-100 flex flex-col gap-3 font-sans select-none"
     >
-      {first && (
-        <header data-reveal>
-          {sceneDef?.kicker && (
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-cyan-400 block mb-1">
-              {sceneDef.kicker}
-            </span>
-          )}
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white font-display leading-tight">
-            {sceneDef?.title}
-          </h2>
-        </header>
-      )}
+      <header data-reveal>
+        <h2 className="text-white leading-tight">{sceneDef?.title}</h2>
+      </header>
 
       {/* Narrative Paragraph */}
       <p
@@ -71,15 +60,12 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, first, last })
       </p>
 
       {/* Verbatim NASA quote on last screen of scene if present */}
-      {last && quote && (
-        <div data-reveal>
-          <QuoteBlock quote={quote} />
-        </div>
-      )}
-
-      {/* Render matching interactive widgets on the last screen of the scene */}
-      {last && (
-        <div data-reveal className="mt-2 flex flex-col gap-3">
+      {/* Optional context stays available throughout the scene, without crowding the story. */}
+      {(quote || (beat.sceneId !== '0.1' && !beat.sceneId.startsWith('6.'))) && (
+        <details className="scene-details" onToggle={(event) => { if (event.currentTarget.open) onOpenDetails?.() }}>
+          <summary>Explore details <span>+</span></summary>
+          <div className="scene-details-content">
+          {quote && <QuoteBlock quote={quote} />}
           {beat.sceneId === '0.2' && <FactDrawer />}
           {beat.sceneId === '1.1' && (
             <>
@@ -145,7 +131,8 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, first, last })
               <KayakExplainer />
             </>
           )}
-        </div>
+          </div>
+        </details>
       )}
     </article>
   )

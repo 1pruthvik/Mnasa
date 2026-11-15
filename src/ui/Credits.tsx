@@ -65,6 +65,9 @@ export const Credits: React.FC<CreditsProps> = ({ isOpen, onClose }) => {
               Audio & Imagery Credits
             </h3>
             <p className="text-slate-700 leading-relaxed text-[11px]">
+              <strong>Spacecraft models:</strong> NASA 3D Resources: <a className="text-blue-700 underline" href="https://github.com/nasa/NASA-3D-Resources" target="_blank" rel="noreferrer">Apollo Lunar Module, InSight and Ingenuity</a>. Models are illustrations, with procedural fallbacks.
+            </p>
+            <p className="text-slate-700 leading-relaxed text-[11px]">
               <strong>Martian Wind Recording:</strong> {UI_COPY.audio.credit}. Captured by InSight SEIS on 1 December 2018.
             </p>
             <p className="text-slate-700 leading-relaxed text-[11px]">
