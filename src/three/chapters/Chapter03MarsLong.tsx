@@ -3,8 +3,14 @@ import { DustField } from '../env/DustField'
 import { OpportunityRover } from '../objects/OpportunityRover'
 import { InSightLander } from '../objects/InSightLander'
 import { Ingenuity } from '../objects/Ingenuity'
+import { useStore } from '../../store'
+import { beatAt } from '../../contracts/beats'
 
 export function Chapter03MarsLong() {
+  const progress = useStore((s) => s.progress)
+  const beat = beatAt(progress)
+  const sceneId = beat.sceneId
+
   return (
     <group>
       {/* Martian Afternoon Sunlight */}
@@ -22,15 +28,14 @@ export function Chapter03MarsLong() {
       {/* Drifting Dust */}
       <DustField />
 
-      {/* Opportunity Rover at Perseverance Valley */}
-      <OpportunityRover />
+      {/* Scene 3.1: Opportunity Rover at Meridiani Planum */}
+      {sceneId === '3.1' && <OpportunityRover />}
 
-      {/* InSight Lander at Elysium Planitia */}
-      <InSightLander />
+      {/* Scene 3.2: InSight Lander at Elysium Planitia */}
+      {sceneId === '3.2' && <InSightLander />}
 
-      {/* Ingenuity Mars Helicopter with animated rotors */}
-      <Ingenuity />
+      {/* Scene 3.3: Ingenuity Mars Helicopter at Jezero Crater */}
+      {sceneId === '3.3' && <Ingenuity />}
     </group>
   )
 }
-

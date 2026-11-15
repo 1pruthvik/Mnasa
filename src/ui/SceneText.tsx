@@ -27,6 +27,7 @@ import { DustSlider } from './widgets/DustSlider'
 import { TwoWorldsPanel } from './widgets/TwoWorldsPanel'
 import { SpeedComparison } from './widgets/SpeedComparison'
 import { KayakExplainer } from './widgets/KayakExplainer'
+import { MissionCard } from './MissionCard'
 import { useReveal } from './motion/useReveal'
 
 interface SceneTextProps {
@@ -76,6 +77,9 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, first, last })
           <QuoteBlock quote={quote} />
         </div>
       )}
+
+      {/* Structured 5-Part Scientific Mission Card */}
+      {last && <MissionCard sceneId={beat.sceneId} />}
 
       {/* Render matching interactive widgets on the last screen of the scene */}
       {last && (

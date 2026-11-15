@@ -1,8 +1,14 @@
 import { StarField } from '../env/StarField'
 import { Pioneer10 } from '../objects/Pioneer10'
 import { Kepler } from '../objects/Kepler'
+import { useStore } from '../../store'
+import { beatAt } from '../../contracts/beats'
 
 export function Chapter05Anywhere() {
+  const progress = useStore((s) => s.progress)
+  const beat = beatAt(progress)
+  const sceneId = beat.sceneId
+
   return (
     <group>
       {/* Cold Deep Space Starlight */}
@@ -12,12 +18,11 @@ export function Chapter05Anywhere() {
       {/* Sparse Deep-Space Starfield */}
       <StarField density="sparse" />
 
-      {/* Pioneer 10: Interstellar probe with gold plaque and 2.74m dish */}
-      <Pioneer10 />
+      {/* Scene 5.1: Pioneer 10 interstellar trajectory */}
+      {sceneId === '5.1' && <Pioneer10 />}
 
-      {/* Kepler Space Telescope */}
-      <Kepler />
+      {/* Scene 5.2: Kepler Space Telescope heliocentric orbit */}
+      {sceneId === '5.2' && <Kepler />}
     </group>
   )
 }
-

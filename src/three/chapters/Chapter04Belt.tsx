@@ -4,8 +4,14 @@ import * as THREE from 'three'
 import { BeltRocks } from '../env/BeltRocks'
 import { Dawn } from '../objects/Dawn'
 import { NEARShoemaker } from '../objects/NEARShoemaker'
+import { useStore } from '../../store'
+import { beatAt } from '../../contracts/beats'
 
 export function Chapter04Belt() {
+  const progress = useStore((s) => s.progress)
+  const beat = beatAt(progress)
+  const sceneId = beat.sceneId
+
   const ceresRef = useRef<THREE.Group>(null!)
   const vestaRef = useRef<THREE.Group>(null!)
   const erosRef = useRef<THREE.Group>(null!)
@@ -25,55 +31,63 @@ export function Chapter04Belt() {
       {/* Instanced Asteroid Belt Ring */}
       <BeltRocks />
 
-      {/* Dwarf Planet Ceres (Sphere with Occator Crater Bright Salt Faculae) */}
-      <group ref={ceresRef} position={[-20, 0, -30]}>
-        <mesh castShadow>
-          <sphereGeometry args={[14, 48, 48]} />
-          <meshStandardMaterial
-            color="#475569"
-            roughness={0.92}
-            metalness={0.08}
-          />
-        </mesh>
-        {/* Occator Crater Bright Salt Faculae Spot */}
-        <mesh position={[6.8, 4.2, 11]}>
-          <circleGeometry args={[1.2, 16]} />
-          <meshBasicMaterial color="#f8fafc" />
-        </mesh>
-      </group>
+      {/* Scene 4.1: Dawn at Dwarf Planet Ceres & Asteroid Vesta */}
+      {sceneId === '4.1' && (
+        <>
+          {/* Dwarf Planet Ceres (Sphere with Occator Crater Bright Salt Faculae) */}
+          <group ref={ceresRef} position={[-20, 0, -30]}>
+            <mesh castShadow>
+              <sphereGeometry args={[14, 48, 48]} />
+              <meshStandardMaterial
+                color="#475569"
+                roughness={0.92}
+                metalness={0.08}
+              />
+            </mesh>
+            <mesh position={[6.8, 4.2, 11]}>
+              <circleGeometry args={[1.2, 16]} />
+              <meshBasicMaterial color="#f8fafc" />
+            </mesh>
+          </group>
 
-      {/* Battered Asteroid Vesta (Scaled non-uniformly [1, 0.86, 0.92] with South Pole Basin) */}
-      <group ref={vestaRef} position={[45, 12, -45]} scale={[1, 0.86, 0.92]}>
-        <mesh castShadow>
-          <sphereGeometry args={[9, 36, 36]} />
-          <meshStandardMaterial
-            color="#64748b"
-            roughness={0.88}
-            metalness={0.14}
-            flatShading
-          />
-        </mesh>
-      </group>
+          {/* Battered Asteroid Vesta */}
+          <group ref={vestaRef} position={[45, 12, -45]} scale={[1, 0.86, 0.92]}>
+            <mesh castShadow>
+              <sphereGeometry args={[9, 36, 36]} />
+              <meshStandardMaterial
+                color="#64748b"
+                roughness={0.88}
+                metalness={0.14}
+                flatShading
+              />
+            </mesh>
+          </group>
 
-      {/* Elongated Asteroid 433 Eros (Irregular peanut scale [1.0, 0.62, 2.4]) */}
-      <group ref={erosRef} position={[-40, -6, -10]} scale={[6.2, 4.2, 12]}>
-        <mesh castShadow>
-          <dodecahedronGeometry args={[1, 2]} />
-          <meshStandardMaterial
-            color="#78716c"
-            roughness={0.94}
-            metalness={0.08}
-            flatShading
-          />
-        </mesh>
-      </group>
+          {/* Dawn Spacecraft in Ceres Orbit */}
+          <Dawn />
+        </>
+      )}
 
-      {/* Dawn Spacecraft in Ceres Orbit */}
-      <Dawn />
+      {/* Scene 4.2: NEAR Shoemaker landed on Asteroid 433 Eros */}
+      {sceneId === '4.2' && (
+        <>
+          {/* Elongated Asteroid 433 Eros (Irregular peanut scale) */}
+          <group ref={erosRef} position={[-40, -6, -10]} scale={[6.2, 4.2, 12]}>
+            <mesh castShadow>
+              <dodecahedronGeometry args={[1, 2]} />
+              <meshStandardMaterial
+                color="#78716c"
+                roughness={0.94}
+                metalness={0.08}
+                flatShading
+              />
+            </mesh>
+          </group>
 
-      {/* NEAR Shoemaker landed on Eros */}
-      <NEARShoemaker />
+          {/* NEAR Shoemaker landed on Eros surface */}
+          <NEARShoemaker />
+        </>
+      )}
     </group>
   )
 }
-

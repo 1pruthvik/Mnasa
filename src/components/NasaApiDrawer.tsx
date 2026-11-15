@@ -39,8 +39,9 @@ export const NasaApiDrawer: React.FC<NasaApiDrawerProps> = ({ isOpen, onClose })
 
   useEffect(() => {
     if (isOpen && !apod && !loading) {
-      fetchApod()
+      void fetchApod()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   if (!isOpen) return null

@@ -8,8 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "check-data": "node --loader ts-node/esm scripts/check-data.ts",
-    "check-copy": "node --loader ts-node/esm scripts/check-copy.ts"
+    "check-data": "tsx scripts/check-data.ts",
+    "check-copy": "tsx scripts/check-copy.ts",
+    "check-credits": "tsx scripts/check-credits.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
@@ -33,6 +34,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "oxlint": "^1.90.0",
+    "tsx": "^4.23.15",
     "typescript": "~7.0.2",
     "vite": "^8.3.6"
   }

@@ -3,8 +3,8 @@ import CanvasRoot from './three/CanvasRoot'
 import { Overlay } from './ui/Overlay'
 import { ProgressRail } from './ui/ProgressRail'
 import { ObjectLabels } from './ui/ObjectLabel'
-import { ReadingModeToggle } from './ui/ReadingModeToggle'
 import { TelemetryHUD } from './ui/TelemetryHUD'
+import { AtlasNavHeader } from './ui/AtlasNavHeader'
 import { Footer } from './ui/Footer'
 import { FallbackStory } from './ui/FallbackStory'
 import { Credits } from './ui/Credits'
@@ -43,7 +43,14 @@ export default function App() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#05070d] text-slate-100 overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#05070d] text-slate-100 overflow-x-hidden pt-12">
+      {/* Persistent Atlas Navigation & WHERE AM I Header */}
+      <AtlasNavHeader
+        onScrollToBeat={handleScrollToBeat}
+        onOpenCredits={() => setCreditsOpen(true)}
+        onOpenMap={() => setMapModalOpen('lunar')}
+      />
+
       {isFallback ? (
         <FallbackStory />
       ) : (
@@ -53,7 +60,6 @@ export default function App() {
           <ObjectLabels />
           <TelemetryHUD />
           <ProgressRail onScrollTo={handleScrollToBeat} />
-          <ReadingModeToggle />
           <Footer
             onOpenCredits={() => setCreditsOpen(true)}
             onOpenMap={() => setMapModalOpen('lunar')}
@@ -97,9 +103,21 @@ export default function App() {
               </button>
             </div>
             {mapModalOpen === 'lunar' ? (
-              <LunarMap onClose={() => setMapModalOpen(null)} />
+              <LunarMap
+                onClose={() => setMapModalOpen(null)}
+                onSelectScene={(sceneId) => {
+                  setMapModalOpen(null)
+                  handleScrollToScene(sceneId)
+                }}
+              />
             ) : (
-              <MarsMap onClose={() => setMapModalOpen(null)} />
+              <MarsMap
+                onClose={() => setMapModalOpen(null)}
+                onSelectScene={(sceneId) => {
+                  setMapModalOpen(null)
+                  handleScrollToScene(sceneId)
+                }}
+              />
             )}
           </div>
         </div>

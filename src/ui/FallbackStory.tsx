@@ -27,6 +27,7 @@ import { SpeedComparison } from './widgets/SpeedComparison'
 import { KayakExplainer } from './widgets/KayakExplainer'
 import { LunarMap } from './LunarMap'
 import { MarsMap } from './MarsMap'
+import { MissionCard } from './MissionCard'
 
 export const FallbackStory: React.FC = () => {
   return (
@@ -74,6 +75,9 @@ export const FallbackStory: React.FC = () => {
 
               {/* Quote if present */}
               {quote && <QuoteBlock quote={quote} />}
+
+              {/* 5-Part Scientific Mission Card */}
+              <MissionCard sceneId={beat.sceneId} />
 
               {/* Static Widgets */}
               <div className="pt-4 flex flex-col gap-4">

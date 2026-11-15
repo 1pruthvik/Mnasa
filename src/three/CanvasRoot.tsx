@@ -12,17 +12,17 @@ export default function CanvasRoot() {
   const webglOk = useStore((s) => s.webglOk)
   const readingMode = useStore((s) => s.readingMode)
 
-  // Canvas is never mounted in the fallback path or reading mode
-  if (reducedMotion || tier === 'none' || !webglOk || readingMode) {
-    return null
-  }
-
   const dpr = useMemo<[number, number]>(() => {
     if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
       return [1, 1.5]
     }
     return [1, 2]
   }, [])
+
+  // Canvas is never mounted in the fallback path or reading mode
+  if (reducedMotion || tier === 'none' || !webglOk || readingMode) {
+    return null
+  }
 
   return (
     <Canvas
