@@ -15,3 +15,4 @@ export interface CelestialBodyData {
   nasaMissions: string[]
   description: string
 }
+
