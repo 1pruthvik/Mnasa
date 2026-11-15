@@ -39,3 +39,4 @@ export const ObjectLabels: React.FC = () => {
     </div>
   )
 }
+

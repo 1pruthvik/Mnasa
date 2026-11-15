@@ -31,3 +31,4 @@ export const DESCENT: WP[] = [
   { t: 0.940, pos: [0, 0, 60], look: [0, 0, -60], fov: 54, note: 'Inventory: dissolve to plane' },
   { t: 1.000, pos: [0, 0, 44], look: [0, 0, -44], fov: 52, note: 'The close: stars, count, nothing else' },
 ]
+

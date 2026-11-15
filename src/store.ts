@@ -120,3 +120,4 @@ export const useStore = create<AppState>((set, get) => ({
   unlockAudio: () => set({ audioUnlocked: true }),
   setLabelPositions: (p) => set({ labelPositions: p }),
 }))
+

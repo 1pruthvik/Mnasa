@@ -6,3 +6,4 @@ export const DOOR = {
   paper: '#f4f7fb',
   void: '#05070d',
 } as const
+

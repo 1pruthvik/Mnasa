@@ -29,3 +29,4 @@ export function useBootCapability() {
     setCapability({ webglOk, tier, reducedMotion })
   }, [setCapability])
 }
+

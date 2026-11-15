@@ -73,3 +73,4 @@ export const ProgressRail: React.FC<ProgressRailProps> = ({ onScrollTo }) => {
     </nav>
   )
 }
+

@@ -209,3 +209,4 @@ export default function ChapterSwitch() {
   const Component = CHAPTER_MAP[activeChapter] || Chapter00Descent
   return <Component key={activeChapter} />
 }
+

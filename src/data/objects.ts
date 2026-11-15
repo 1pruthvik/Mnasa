@@ -468,3 +468,4 @@ export const BY_ID = Object.fromEntries(OBJECTS.map((o) => [o.id, o]))
 export const WORKING_ONLY = OBJECTS.filter((o) =>
   o.subElements?.some((s) => s.state.includes('operational'))
 )
+

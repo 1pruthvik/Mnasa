@@ -95,3 +95,4 @@ export const MarsMap: React.FC<MarsMapProps> = ({ onClose }) => {
     </div>
   )
 }
+

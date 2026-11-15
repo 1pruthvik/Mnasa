@@ -52,3 +52,4 @@ export const VitalSigns: React.FC = () => {
     </div>
   )
 }
+

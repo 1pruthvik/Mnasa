@@ -42,3 +42,4 @@ if (errors === 0) {
   console.error(`Found ${errors} data integrity errors.`)
   process.exit(1)
 }
+

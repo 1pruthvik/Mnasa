@@ -19,3 +19,4 @@ export const ALL_WIDGETS: WidgetSpec[] = [
   { id: 'plaque-viewer', sceneId: '5.1', placement: 'right', title: 'Pioneer Plaque Hotspots' },
   { id: 'transit-demo', sceneId: '5.2', placement: 'right', title: 'Exoplanet Transit Photometry' },
 ]
+

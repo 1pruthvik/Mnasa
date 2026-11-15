@@ -106,3 +106,4 @@ export const FlightCounter: React.FC = () => {
     </div>
   )
 }
+

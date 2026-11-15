@@ -38,3 +38,4 @@ export function projectToScreen(
     visible: v.z < 1 && v.z > -1,
   }
 }
+

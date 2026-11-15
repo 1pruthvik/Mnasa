@@ -45,3 +45,4 @@ export const MoonquakeWaveform: React.FC = () => {
     </div>
   )
 }
+

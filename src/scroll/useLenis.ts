@@ -65,3 +65,4 @@ export function useLenis(enabled: boolean) {
     }
   }, [enabled, setProgress])
 }
+

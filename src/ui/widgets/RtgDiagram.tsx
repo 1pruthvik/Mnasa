@@ -32,3 +32,4 @@ export const RtgDiagram: React.FC = () => {
     </div>
   )
 }
+

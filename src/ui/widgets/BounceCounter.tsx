@@ -36,3 +36,4 @@ export const BounceCounter: React.FC = () => {
     </div>
   )
 }
+

@@ -356,3 +356,4 @@ export const SCENES: Record<string, SceneDefinition> = {
     widgets: [],
   },
 }
+

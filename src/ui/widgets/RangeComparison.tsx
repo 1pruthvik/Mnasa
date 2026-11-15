@@ -42,3 +42,4 @@ export const RangeComparison: React.FC = () => {
     </div>
   )
 }
+

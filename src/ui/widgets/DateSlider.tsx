@@ -77,3 +77,4 @@ export const DateSlider: React.FC = () => {
     </div>
   )
 }
+

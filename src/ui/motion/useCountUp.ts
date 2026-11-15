@@ -34,3 +34,4 @@ export function useCountUp(
     })
   }, [el, to, from, ms, decimals, reduced])
 }
+

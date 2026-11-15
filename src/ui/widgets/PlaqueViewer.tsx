@@ -67,3 +67,4 @@ export const PlaqueViewer: React.FC = () => {
     </div>
   )
 }
+

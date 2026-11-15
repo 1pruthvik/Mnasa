@@ -61,3 +61,4 @@ export const FactDrawer: React.FC = () => {
     </div>
   )
 }
+

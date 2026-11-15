@@ -17,3 +17,4 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ quote }) => {
     </figure>
   )
 }
+

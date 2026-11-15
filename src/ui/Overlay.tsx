@@ -59,3 +59,4 @@ export const Overlay: React.FC<OverlayProps> = ({ onScrollToScene }) => {
     </section>
   )
 }
+

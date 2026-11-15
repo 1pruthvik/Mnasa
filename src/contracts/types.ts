@@ -87,3 +87,4 @@ export interface SourceEntry {
   usedFor: string[]               // scene ids
   fetched: string                 // '2026-11-15'
 }
+

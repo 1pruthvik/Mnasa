@@ -110,3 +110,4 @@ export const SceneText: React.FC<SceneTextProps> = ({ beat, text, first, last })
     </article>
   )
 }
+

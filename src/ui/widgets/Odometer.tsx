@@ -41,3 +41,4 @@ export const Odometer: React.FC = () => {
     </div>
   )
 }
+

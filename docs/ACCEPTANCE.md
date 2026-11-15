@@ -48,3 +48,4 @@
 - **Single Progress Seam**: `useLenis` drives window scroll; raw `progress` feeds R3F and DOM overlays.
 - **Tone & Registry**: Zero instances of banned words (*junk, trash, wreck, garbage, graveyard, litter*). NASA archival voice preserved throughout.
 - **Non-Endorsement Notice**: Placed in footer and full credit ledger.
+

@@ -67,3 +67,4 @@ export const WeatherLog: React.FC = () => {
     </div>
   )
 }
+
