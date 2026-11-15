@@ -6,63 +6,43 @@ export function useLenis(enabled: boolean) {
   const setProgress = useStore((s) => s.setProgress)
 
   useEffect(() => {
+    const onNativeScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(max > 0 ? window.scrollY / max : 0)
+    }
+
     if (!enabled) {
-      // Passive native scroll fallback
-      const onNativeScroll = () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight
-        setProgress(max > 0 ? window.scrollY / max : 0)
-      }
       window.addEventListener('scroll', onNativeScroll, { passive: true })
       onNativeScroll()
       return () => window.removeEventListener('scroll', onNativeScroll)
     }
 
     const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t: number) => 1 - Math.pow(1 - t, 3),
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 1.6,
-      syncTouch: false, // native touch scroll feels better on iOS
-      autoRaf: false,  // driven with our own rAF loop
+      touchMultiplier: 1.5,
     })
 
-    let raf = 0
-    let running = true
-
-    const loop = (time: number) => {
-      if (!running) return
-      lenis.raf(time)
-      raf = requestAnimationFrame(loop)
+    const onScroll = (e: any) => {
+      const p =
+        typeof e?.progress === 'number'
+          ? e.progress
+          : e?.limit > 0
+          ? e.scroll / e.limit
+          : 0
+      setProgress(Math.max(0, Math.min(1, p)))
     }
-    raf = requestAnimationFrame(loop)
 
-    // Single source of progress
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight
-      setProgress(max > 0 ? lenis.scroll / max : 0)
-    }
     lenis.on('scroll', onScroll)
-    onScroll()
-
-    const onVis = () => {
-      running = document.visibilityState === 'visible'
-      if (running) {
-        raf = requestAnimationFrame(loop)
-      } else {
-        cancelAnimationFrame(raf)
-        lenis.stop()
-      }
-    }
-    document.addEventListener('visibilitychange', onVis)
+    window.addEventListener('scroll', onNativeScroll, { passive: true })
+    onNativeScroll()
 
     return () => {
-      running = false
-      cancelAnimationFrame(raf)
-      document.removeEventListener('visibilitychange', onVis)
+      window.removeEventListener('scroll', onNativeScroll)
       lenis.off('scroll', onScroll)
       lenis.destroy()
     }
   }, [enabled, setProgress])
 }
-

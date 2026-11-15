@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useMemo } from 'react'
 import * as THREE from 'three'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { useStore } from '../store'
 import CameraRig from './CameraRig'
 import ChapterSwitch from './chapters/ChapterSwitch'
@@ -38,9 +39,9 @@ export default function CanvasRoot() {
       camera={{ fov: 70, near: 0.05, far: 4000, position: [0, 0, 900] }}
       onCreated={({ gl, scene }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping
-        gl.toneMappingExposure = 1.05
+        gl.toneMappingExposure = 1.15
         gl.outputColorSpace = THREE.SRGBColorSpace
-        scene.background = new THREE.Color('#05070d')
+        scene.background = new THREE.Color('#030712')
       }}
       style={{
         position: 'fixed',
@@ -52,8 +53,16 @@ export default function CanvasRoot() {
       <Suspense fallback={null}>
         <CameraRig />
         <ChapterSwitch />
+        {tier !== 'low' && (
+          <EffectComposer>
+            <Bloom
+              luminanceThreshold={0.75}
+              luminanceSmoothing={0.3}
+              intensity={0.45}
+            />
+          </EffectComposer>
+        )}
       </Suspense>
     </Canvas>
   )
 }
-
